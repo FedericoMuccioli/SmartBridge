@@ -1,7 +1,6 @@
 #ifndef __SERVOMOTORIMPL__
 #define __SERVOMOTORIMPL__
 
-#include <arduino.h>
 #include <ServoTimer2.h>
 #include "ServoMotor.h"
 

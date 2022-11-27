@@ -1,4 +1,4 @@
-#include "Arduino.h"
+#include <Arduino.h>
 #include "SonarImpl.h"
 
 const float soundSpeed = 331.45 + 0.62*20; //supponendo di eseguire il test in un ambiente a 20 °C

@@ -1,4 +1,3 @@
-#include "Arduino.h"
 #include "LcdImpl.h"
 
 LcdImpl::LcdImpl(int addr, int cols, int rows){

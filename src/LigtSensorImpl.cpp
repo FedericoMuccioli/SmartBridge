@@ -1,4 +1,4 @@
-#include "Arduino.h"
+#include <Arduino.h>
 #include "LightSensorImpl.h"
 
 LightSensorImpl::LightSensorImpl(int pin){
