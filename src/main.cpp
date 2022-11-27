@@ -1,17 +1,20 @@
 #include <Arduino.h>
-#include <LiquidCrystal_I2C.h> 
+#include "SmartLightingTask.h"
+/*
 #include "Led.h"
 #include "LightSensorImpl.h"
-#include "PirSensorImpl.h"
+#include "PirSensorImpl.h"*/
 #include "ButtonImpl.h"
 #include "PotentiometerImpl.h"
 #include "ServoMotorImpl.h"
 #include "SonarImpl.h"
 #include "LcdImpl.h"
 
+SmartLightingTask* smartLightingTask;
+/*
 Light* light;
 LightSensor* lightSensor;
-PirSensor* pirSensor;
+PirSensor* pirSensor;*/
 Button* button;
 Potentiometer* potentiometer;
 ServoMotor* motor;
@@ -23,9 +26,12 @@ Lcd* lcd;
 void setup ( )
 {
   Serial.begin(9600);
+  smartLightingTask = new SmartLightingTask(2, 5, A0);
+  smartLightingTask->init(0);
+  /*
   light = new Led(LED_BUILTIN);
   lightSensor = new LightSensorImpl(A0);
-  pirSensor = new PirSensorImpl(5);
+  pirSensor = new PirSensorImpl(5);*/
   button = new ButtonImpl(7);
   potentiometer = new PotentiometerImpl(A2);
   motor = new ServoMotorImpl(11);
@@ -53,9 +59,8 @@ void loop()
   lcd->print("Ciao");
   */
 
-
-
-  delay(10000);
+  smartLightingTask->tick();
+  delay(1000);
   
   
 
