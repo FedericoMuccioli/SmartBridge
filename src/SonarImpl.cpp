@@ -12,7 +12,11 @@ SonarImpl::SonarImpl(int trigPin, int echoPin){
 
 float SonarImpl::getDistance(){
   sendImpulse();
-  return getTimeImpulse()*soundSpeed;
+  float distance = getTimeImpulse()*soundSpeed;
+  /*debug*/
+  Serial.print("distance: ");
+  Serial.println(distance);//debug
+  return distance;
 }
 
 void SonarImpl::sendImpulse(){

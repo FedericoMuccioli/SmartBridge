@@ -1,42 +1,56 @@
 #include <Arduino.h>
 #include "SmartLightingTask.h"
+#include "WaterLevelTask.h"
 /*
 #include "Led.h"
 #include "LightSensorImpl.h"
-#include "PirSensorImpl.h"*/
-#include "ButtonImpl.h"
-#include "PotentiometerImpl.h"
+#include "PirSensorImpl.h"
 #include "ServoMotorImpl.h"
 #include "SonarImpl.h"
 #include "LcdImpl.h"
+#include "ButtonImpl.h"
+#include "PotentiometerImpl.h"
+*/
+
+
+
 
 SmartLightingTask* smartLightingTask;
+WaterLevelTask* waterLevelTask;
 /*
 Light* light;
 LightSensor* lightSensor;
-PirSensor* pirSensor;*/
-Button* button;
-Potentiometer* potentiometer;
+PirSensor* pirSensor;
 ServoMotor* motor;
 Sonar* sonar;
 Lcd* lcd;
+Button* button;
+Potentiometer* potentiometer;
+*/
+
+
  
 
 
 void setup ( )
 {
   Serial.begin(9600);
-  smartLightingTask = new SmartLightingTask(2, 5, A0);
+  smartLightingTask = new SmartLightingTask(7, 5, A0);
   smartLightingTask->init(0);
+  waterLevelTask = new WaterLevelTask(3,4,13,12,11,0x27,20,4,2,A2);
+  waterLevelTask->init(0);
   /*
-  light = new Led(LED_BUILTIN);
+  light = new Led(7);
   lightSensor = new LightSensorImpl(A0);
-  pirSensor = new PirSensorImpl(5);*/
-  button = new ButtonImpl(7);
-  potentiometer = new PotentiometerImpl(A2);
+  pirSensor = new PirSensorImpl(5);
   motor = new ServoMotorImpl(11);
   sonar = new SonarImpl(13, 12);
   lcd = new LcdImpl(0x27,20,4);
+  button = new ButtonImpl(2);
+  potentiometer = new PotentiometerImpl(A2);
+  */
+  
+  
 }
 
 void loop()
@@ -59,8 +73,9 @@ void loop()
   lcd->print("Ciao");
   */
 
-  smartLightingTask->tick();
-
+  //smartLightingTask->tick();
+  waterLevelTask->tick();
+  delay(1000);
   
   
 

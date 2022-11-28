@@ -11,11 +11,13 @@ public:
   ServoMotorImpl(int pin);
 
   void on();
-  void setPosition(int angle);
   void off();
+  void setPosition(int angle);
+  int getPosition();
     
 private:
-  int pin; 
+  int pin;
+  int angle;
   ServoTimer2 motor;
 };
 
