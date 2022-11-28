@@ -7,5 +7,10 @@ LightSensorImpl::LightSensorImpl(int pin){
 }
 
 int LightSensorImpl::getLightIntensity(){
-  return analogRead(pin);
+  int lightIntesity = analogRead(pin);
+  /*
+  Serial.print("lightIntesity: ");//debug
+  Serial.println(lightIntesity);//debug
+  */
+  return lightIntesity;
 }
