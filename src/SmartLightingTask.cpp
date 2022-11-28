@@ -1,4 +1,6 @@
+#include <Arduino.h>
 #include "SmartLightingTask.h"
+
 
 SmartLightingTask::SmartLightingTask(int pinLed, int pinPir, int pinLight){
   this->pinLed = pinLed;
@@ -11,18 +13,27 @@ void SmartLightingTask::init(int period){
   led = new Led(pinLed);
   pirSensor = new PirSensorImpl(pinPir);
   lightSensor = new LightSensorImpl(pinLight);
-  state = OFF;    
+  state = OFF;
 }
   
 void SmartLightingTask::tick(){
   switch (state){
     case OFF:
-      led->switchOn();
-      state = ON; 
+      led->switchOff();
+      if (pirSensor->isMoved() && lightSensor->getLightIntensity() < THl){
+        state = ON;
+        time = millis();
+      }
       break;
     case ON:
-      led->switchOff();
-      state = OFF;
+      led->switchOn();
+      if (pirSensor->isMoved()){
+        time = millis();
+      }
+      if (millis() - time >= T || lightSensor->getLightIntensity() > THl){
+        state = OFF;
+      }
       break;
   }
+  
 }

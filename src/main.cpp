@@ -60,7 +60,7 @@ void loop()
   */
 
   smartLightingTask->tick();
-  delay(1000);
+
   
   
 
