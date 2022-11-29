@@ -5,11 +5,14 @@
 #include "Led.h"
 #include "SonarImpl.h"
 #include "ServoMotorImpl.h"
-//#include "LcdImpl.h"
 #include <LiquidCrystal_I2C.h>
 #include "ButtonImpl.h"
 #include "PotentiometerImpl.h"
+#include "SmartLightingTask.h"
 
+#define SAMPLING_NORMAL 3000
+#define SAMPLING_PRE_ALARM 2000
+#define SAMPLING_ALARM 1000
 
 
 class WaterLevelTask: public Task {
@@ -34,6 +37,7 @@ private:
   LiquidCrystal_I2C *lcd;
   Button* button;
   Potentiometer* potentiometer;
+  SmartLightingTask* smartLight;
 
   enum { NORMAL, PRE_ALARM, ALARM} state, preState;
 
@@ -44,14 +48,14 @@ private:
   const unsigned long T_BLINK_LEDR = 2000;
   unsigned long timeChangeLedR;
   int distance;
-  bool manualControl;
   void blinkLedR();
   void displayPreAlarm();
   void displayAlarm();
 
 
 public:
-  WaterLevelTask(int pinLedG, int pinLedR, int pinTrigSonar, int pinEchoSonar, int pinMotor, int addrLcd, int rowsLcd, int colsLcd, int pinBtn, int pinPot);
+  WaterLevelTask(int pinLedG, int pinLedR, int pinTrigSonar, int pinEchoSonar,
+     int pinMotor, int addrLcd, int rowsLcd, int colsLcd, int pinBtn, int pinPot, SmartLightingTask* smartLight);
   void init(int period);
   void tick();
 };

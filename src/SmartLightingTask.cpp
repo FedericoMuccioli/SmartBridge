@@ -35,5 +35,12 @@ void SmartLightingTask::tick(){
       }
       break;
   }
-  
 }
+
+  void SmartLightingTask::setActive(bool active){
+    if (!active){
+      led->switchOff();
+      time = 0;
+    }
+    Task::setActive(active);
+  }

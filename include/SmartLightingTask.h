@@ -26,6 +26,7 @@ public:
   SmartLightingTask(int pinLed, int pinPir, int pinLight);  
   void init(int period);  
   void tick();
+  void setActive(bool active);
 };
 
 #endif

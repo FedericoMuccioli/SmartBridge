@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include "Scheduler.h"
 #include "SmartLightingTask.h"
 #include "WaterLevelTask.h"
 /*
@@ -12,12 +13,10 @@
 #include "PotentiometerImpl.h"
 */
 
-
-
-
+Scheduler sched;
+/*
 SmartLightingTask* smartLightingTask;
 WaterLevelTask* waterLevelTask;
-/*
 Light* light;
 LightSensor* lightSensor;
 PirSensor* pirSensor;
@@ -29,16 +28,21 @@ Potentiometer* potentiometer;
 */
 
 
- 
-
-
 void setup ( )
 {
   Serial.begin(9600);
-  smartLightingTask = new SmartLightingTask(7, 5, A0);
-  smartLightingTask->init(0);
-  waterLevelTask = new WaterLevelTask(3,4,13,12,11,0x27,20,4,2,A2);
-  waterLevelTask->init(0);
+  sched.init(100);
+  SmartLightingTask* smartLight= new SmartLightingTask(7, 5, A0);
+  Task* waterLevel = new WaterLevelTask(3,4,13,12,11,0x27,20,4,2,A2,smartLight);
+  smartLight->init(100);
+  waterLevel->init(SAMPLING_NORMAL);
+  sched.addTask(smartLight);
+  sched.addTask(waterLevel);
+
+  //smartLightingTask = new SmartLightingTask(7, 5, A0);
+  //smartLightingTask->init(0);
+  //waterLevelTask = new WaterLevelTask(3,4,13,12,11,0x27,20,4,2,A2);
+  //waterLevelTask->init(0);
   /*
   light = new Led(7);
   lightSensor = new LightSensorImpl(A0);
@@ -74,9 +78,9 @@ void loop()
   */
 
   //smartLightingTask->tick();
-  waterLevelTask->tick();
-  delay(1000);
-  
+  //waterLevelTask->tick();
+  //delay(1000);
+  sched.schedule();
   
 
 
