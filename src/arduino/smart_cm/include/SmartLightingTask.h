@@ -17,7 +17,7 @@ private:
   Light* led;
   PirSensor* pirSensor;
   LightSensor* lightSensor;
-  enum { ON, OFF} state;
+  enum {OFF, ON} state;
   volatile unsigned long time;
   const unsigned long T = 3000;
   const int THl = 400;
