@@ -23,7 +23,7 @@ WaterLevelTask::WaterLevelTask(int pinLedG, int pinLedR, int pinTrigSonar, int p
   this->smartLight = smartLight;
 }
   
-void WaterLevelTask::init(int period){//usare setNormalState
+void WaterLevelTask::init(int period){
   Task::init(period);
   ledG = new Led(pinLedG);
   ledR = new Led(pinLedR);
@@ -132,7 +132,6 @@ void WaterLevelTask::displayPreAlarm(){
   lcd->print("Water Level: ");
   lcd->print(distance);
 }
-
 
 void WaterLevelTask::displayAlarm(){
   lcd->backlight();

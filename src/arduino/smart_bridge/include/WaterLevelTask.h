@@ -14,7 +14,6 @@
 #define SAMPLING_PRE_ALARM 2000
 #define SAMPLING_ALARM 1000
 
-
 class WaterLevelTask: public Task {
 
 private:
@@ -39,7 +38,7 @@ private:
   Potentiometer* potentiometer;
   Active* smartLight;
 
-  enum { NORMAL, PRE_ALARM, ALARM} state, preState;
+  enum { NORMAL, PRE_ALARM, ALARM} state;
 
   volatile unsigned long time;
   const float WL_NORMAL = 30;

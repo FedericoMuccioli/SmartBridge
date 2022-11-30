@@ -12,8 +12,8 @@ private:
   PirSensor* pirSensor;
   LightSensor* lightSensor;
   volatile unsigned long time;
-  const unsigned long T = 3000;
-  const int THl = 400;
+  const unsigned long timeDetected = 2000;
+  const int lightThreshold = 400;
 
 public:
   SmartLighting();

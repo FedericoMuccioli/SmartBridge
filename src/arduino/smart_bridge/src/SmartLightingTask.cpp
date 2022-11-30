@@ -2,7 +2,6 @@
 #include "SmartLightingTask.h"
 #include "MsgService.h"
 
-
 SmartLightingTask::SmartLightingTask(SmartLighting* smartLighting){
   this->smartLighting = smartLighting;
 }
@@ -10,33 +9,33 @@ SmartLightingTask::SmartLightingTask(SmartLighting* smartLighting){
 void SmartLightingTask::init(int period){
   Task::init(period);
   smartLighting->init();
-  state = DARK;
+  state = OFF;
 }
   
 void SmartLightingTask::tick(){
 
   switch (state){//aggiungere stato sospesa
-    case DARK:
+    case OFF:
       if (smartLighting->isSomeoneDetected()){
         smartLighting->turnLightOn();
-        state = LIGHT;
+        state = ON;
       }
       break;
-    case LIGHT:
+    case ON:
       if (!(smartLighting->isSomeoneDetected())){
         smartLighting->turnLightOff();
-        state = DARK;
+        state = OFF;
       }
       break;
   }
   //MsgService.sendMsg("light: " + String(state));
 }
 
-  void SmartLightingTask::setActive(bool active){//sistemare
-    if (!active){
-      smartLighting->init();
-      state = DARK;
-      MsgService.sendMsg("light: " + String(state));
-    }
-    Task::setActive(active);
+void SmartLightingTask::setActive(bool active){//sistemare
+  if (!active){
+    smartLighting->init();
+    state = OFF;
+    MsgService.sendMsg("light: " + String(state));
   }
+  Task::setActive(active);
+}

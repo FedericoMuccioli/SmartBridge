@@ -21,7 +21,7 @@ bool SmartLighting::isSomeoneDetected(){
   if (pirSensor->isMoved()){
     time = millis();
   }
-  return (pirSensor->isMoved() || millis() - time < T) && lightSensor->getLightIntensity() <= THl;
+  return (pirSensor->isMoved() || millis() - time < timeDetected) && lightSensor->getLightIntensity() <= lightThreshold;
 }
 
 void SmartLighting::turnLightOn(){

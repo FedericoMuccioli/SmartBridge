@@ -18,12 +18,12 @@ void setup ( )
   
   smartLighting = new SmartLighting();
 
-  Task* smartLight= new SmartLightingTask(smartLighting);
-  Task* waterLevel = new WaterLevelTask(3,4,13,12,11,0x27,20,4,2,A2,smartLight);
-  smartLight->init(100);
-  waterLevel->init(SAMPLING_NORMAL);
-  sched.addTask(smartLight);
-  sched.addTask(waterLevel);
+  Task* smartLightingTask= new SmartLightingTask(smartLighting);
+  Task* waterLevelTask = new WaterLevelTask(3,4,13,12,11,0x27,20,4,2,A2,smartLightingTask);
+  smartLightingTask->init(100);
+  waterLevelTask->init(SAMPLING_NORMAL);
+  sched.addTask(smartLightingTask);
+  sched.addTask(waterLevelTask);
 }
 
 void loop()
