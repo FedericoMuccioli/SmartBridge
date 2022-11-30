@@ -19,7 +19,7 @@ void setup ( )
   smartLighting = new SmartLighting();
 
   Task* smartLightingTask= new SmartLightingTask(smartLighting);
-  Task* waterLevelTask = new WaterLevelTask(3,4,13,12,11,0x27,20,4,2,A2,smartLightingTask);
+  Task* waterLevelTask = new WaterLevelTask(3,4,13,12,11,0x27,20,4,smartLightingTask);
   smartLightingTask->init(100);
   waterLevelTask->init(SAMPLING_NORMAL);
   sched.addTask(smartLightingTask);

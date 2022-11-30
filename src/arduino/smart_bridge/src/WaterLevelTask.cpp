@@ -2,14 +2,10 @@
 #include "WaterLevelTask.h"
 #include "MsgService.h"
 
-bool manualControl;
 
-void buttonHandler(void){
-  manualControl = !manualControl;
-}
 
 WaterLevelTask::WaterLevelTask(int pinLedG, int pinLedR, int pinTrigSonar, int pinEchoSonar, 
-    int pinMotor, int addrLcd, int rowsLcd, int colsLcd, int pinBtn, int pinPot, Active* smartLight){
+    int pinMotor, int addrLcd, int rowsLcd, int colsLcd, Active* smartLight){
   this->pinLedG = pinLedG;
   this->pinLedR = pinLedR;
   this->pinTrigSonar = pinTrigSonar;
@@ -18,8 +14,6 @@ WaterLevelTask::WaterLevelTask(int pinLedG, int pinLedR, int pinTrigSonar, int p
   this->addrLcd = addrLcd;
   this->colsLcd = colsLcd;
   this->rowsLcd = rowsLcd;
-  this->pinBtn = pinBtn;
-  this->pinPot = pinPot;
   this->smartLight = smartLight;
 }
   
@@ -31,11 +25,9 @@ void WaterLevelTask::init(int period){
   motor = new ServoMotorImpl(pinMotor);
   lcd = new LiquidCrystal_I2C(addrLcd,colsLcd,rowsLcd);
   lcd->init();
-  button = new ButtonImpl(pinBtn);
-  potentiometer = new PotentiometerImpl(pinPot);
   motor->on();
   motor->setPosition(0);
-  attachInterrupt(digitalPinToInterrupt(pinBtn), buttonHandler, RISING);
+  manualControl = new ManualControl();
   setNormalState();
 }
 
@@ -66,19 +58,20 @@ void WaterLevelTask::tick(){
       if (distance > WL_PRE_ALARM){
         motor->setPosition(0);
         smartLight->setActive(true);
+        manualControl->endCheck();
         if(distance > WL_NORMAL){//NORMAL
           setNormalState();
         } else if (distance <= WL_NORMAL && distance > WL_PRE_ALARM){//PRE_ALARM
           setPreAlarmState();
         }
       } else {
-        int angle = manualControl ? map(potentiometer->getAdjustment(), 10, 1000, 0, 180) :  map(distance, WL_PRE_ALARM, WL_MAX, 0, 180);//fare macro
+        int angle = manualControl->isActive() ? map(manualControl->getValue(), 10, 1000, 0, 180) :  map(distance, WL_PRE_ALARM, WL_MAX, 0, 180);//fare macro
         motor->setPosition(angle);
         displayAlarm();
       }
       break;
   }
-  MsgService.sendMsg("state: " + String(state));
+  //MsgService.sendMsg("state: " + String(state));
 }
 
 void WaterLevelTask::setNormalState(){
@@ -102,8 +95,9 @@ void WaterLevelTask::setAlarmState(){
   ledR->switchOn();
   ledG->switchOff();
   smartLight->setActive(false);
-  manualControl = false;
-  int angle = manualControl ? map(potentiometer->getAdjustment(), 10, 1000, 0, 180) :  map(distance, WL_PRE_ALARM, WL_MAX, 0, 180);//fare macro
+  //manualControl = false;
+  manualControl->startCheck();
+  int angle = manualControl->isActive() ? map(manualControl->getValue(), 10, 1000, 0, 180) :  map(distance, WL_PRE_ALARM, WL_MAX, 0, 180);//fare macro
   if (MsgService.isMsgAvailable()){
     Msg* msg = MsgService.receiveMsg();
     String string = msg->getContent();

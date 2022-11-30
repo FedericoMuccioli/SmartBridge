@@ -35,7 +35,7 @@ void SmartLightingTask::setActive(bool active){//sistemare
   if (!active){
     smartLighting->init();
     state = OFF;
-    MsgService.sendMsg("light: " + String(state));
+    //MsgService.sendMsg("light: " + String(state));
   }
   Task::setActive(active);
 }

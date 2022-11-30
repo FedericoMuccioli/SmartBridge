@@ -2,8 +2,11 @@
 #define __CONFIG__
 
 #define PHOTO_PIN A0
+#define POT_PIN A2
 #define PIR_PIN 5
 #define LIGHT_PIN 7
+#define BUTTON_PIN 2
+
 /*
 #define BT_UP_PIN 5
 #define BT_DOWN_PIN 4

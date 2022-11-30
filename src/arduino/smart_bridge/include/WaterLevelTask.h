@@ -9,6 +9,7 @@
 #include "ButtonImpl.h"
 #include "PotentiometerImpl.h"
 #include "SmartLightingTask.h"
+#include "ManualControl.h"
 
 #define SAMPLING_NORMAL 3000
 #define SAMPLING_PRE_ALARM 2000
@@ -25,8 +26,6 @@ private:
   int addrLcd;
   int colsLcd;
   int rowsLcd;
-  int pinBtn;
-  int pinPot;
   
   Light* ledG;
   Light* ledR;
@@ -34,9 +33,8 @@ private:
   ServoMotor* motor;
   //Lcd* lcd;
   LiquidCrystal_I2C *lcd;
-  Button* button;
-  Potentiometer* potentiometer;
   Active* smartLight;
+  ManualControl* manualControl;
 
   enum { NORMAL, PRE_ALARM, ALARM} state;
 
@@ -57,7 +55,7 @@ private:
 
 public:
   WaterLevelTask(int pinLedG, int pinLedR, int pinTrigSonar, int pinEchoSonar,
-     int pinMotor, int addrLcd, int rowsLcd, int colsLcd, int pinBtn, int pinPot, Active* smartLight);
+     int pinMotor, int addrLcd, int rowsLcd, int colsLcd, Active* smartLight);
   void init(int period);
   void tick();
 };
