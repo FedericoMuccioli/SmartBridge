@@ -3,47 +3,39 @@
 #include "MsgService.h"
 
 
-SmartLightingTask::SmartLightingTask(int pinLed, int pinPir, int pinLight){
-  this->pinLed = pinLed;
-  this->pinPir = pinPir;
-  this->pinLight = pinLight;
+SmartLightingTask::SmartLightingTask(SmartLighting* smartLighting){
+  this->smartLighting = smartLighting;
 }
   
 void SmartLightingTask::init(int period){
   Task::init(period);
-  led = new Led(pinLed);
-  pirSensor = new PirSensorImpl(pinPir);
-  lightSensor = new LightSensorImpl(pinLight);
-  state = OFF;
+  smartLighting->init();
+  state = DARK;
 }
   
 void SmartLightingTask::tick(){
-  switch (state){
-    case OFF:
-      led->switchOff();
-      if (pirSensor->isMoved() && lightSensor->getLightIntensity() < THl){
-        state = ON;
-        time = millis();
+
+  switch (state){//aggiungere stato sospesa
+    case DARK:
+      if (smartLighting->isSomeoneDetected()){
+        smartLighting->turnLightOn();
+        state = LIGHT;
       }
       break;
-    case ON:
-      led->switchOn();
-      if (pirSensor->isMoved()){
-        time = millis();
-      }
-      if (millis() - time >= T || lightSensor->getLightIntensity() > THl){
-        state = OFF;
+    case LIGHT:
+      if (!(smartLighting->isSomeoneDetected())){
+        smartLighting->turnLightOff();
+        state = DARK;
       }
       break;
   }
   //MsgService.sendMsg("light: " + String(state));
 }
 
-  void SmartLightingTask::setActive(bool active){
+  void SmartLightingTask::setActive(bool active){//sistemare
     if (!active){
-      led->switchOff();
-      state = OFF;
-      time = 0;
+      smartLighting->init();
+      state = DARK;
       MsgService.sendMsg("light: " + String(state));
     }
     Task::setActive(active);

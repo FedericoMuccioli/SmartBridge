@@ -2,32 +2,19 @@
 #define __SMARTLIGHTINGTASK__
 
 #include "Task.h"
-#include "Led.h"
-#include "PirSensorImpl.h"
-#include "LightSensorImpl.h"
-
-
+#include "SmartLighting.h"
 
 class SmartLightingTask: public Task {
 
 private:
-  int pinLed;
-  int pinPir;
-  int pinLight;
-  Light* led;
-  PirSensor* pirSensor;
-  LightSensor* lightSensor;
-  enum {OFF, ON} state;
-  volatile unsigned long time;
-  const unsigned long T = 3000;
-  const int THl = 400;
+  SmartLighting* smartLighting;
+  enum {DARK, LIGHT} state;
 
 public:
-  SmartLightingTask(int pinLed, int pinPir, int pinLight);  
+  SmartLightingTask(SmartLighting* smartLighting);  
   void init(int period);  
   void tick();
   void setActive(bool active);
 };
 
 #endif
-

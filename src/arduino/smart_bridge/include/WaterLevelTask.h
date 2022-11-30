@@ -37,7 +37,7 @@ private:
   LiquidCrystal_I2C *lcd;
   Button* button;
   Potentiometer* potentiometer;
-  SmartLightingTask* smartLight;
+  Active* smartLight;
 
   enum { NORMAL, PRE_ALARM, ALARM} state, preState;
 
@@ -48,6 +48,9 @@ private:
   const unsigned long T_BLINK_LEDR = 2000;
   unsigned long timeChangeLedR;
   int distance;
+  void setNormalState();
+  void setPreAlarmState();
+  void setAlarmState();
   void blinkLedR();
   void displayPreAlarm();
   void displayAlarm();
@@ -55,7 +58,7 @@ private:
 
 public:
   WaterLevelTask(int pinLedG, int pinLedR, int pinTrigSonar, int pinEchoSonar,
-     int pinMotor, int addrLcd, int rowsLcd, int colsLcd, int pinBtn, int pinPot, SmartLightingTask* smartLight);
+     int pinMotor, int addrLcd, int rowsLcd, int colsLcd, int pinBtn, int pinPot, Active* smartLight);
   void init(int period);
   void tick();
 };

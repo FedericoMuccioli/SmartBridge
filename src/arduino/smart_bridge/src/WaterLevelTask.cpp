@@ -9,7 +9,7 @@ void buttonHandler(void){
 }
 
 WaterLevelTask::WaterLevelTask(int pinLedG, int pinLedR, int pinTrigSonar, int pinEchoSonar, 
-    int pinMotor, int addrLcd, int rowsLcd, int colsLcd, int pinBtn, int pinPot, SmartLightingTask* smartLight){
+    int pinMotor, int addrLcd, int rowsLcd, int colsLcd, int pinBtn, int pinPot, Active* smartLight){
   this->pinLedG = pinLedG;
   this->pinLedR = pinLedR;
   this->pinTrigSonar = pinTrigSonar;
@@ -23,7 +23,7 @@ WaterLevelTask::WaterLevelTask(int pinLedG, int pinLedR, int pinTrigSonar, int p
   this->smartLight = smartLight;
 }
   
-void WaterLevelTask::init(int period){
+void WaterLevelTask::init(int period){//usare setNormalState
   Task::init(period);
   ledG = new Led(pinLedG);
   ledR = new Led(pinLedR);
@@ -35,56 +35,85 @@ void WaterLevelTask::init(int period){
   potentiometer = new PotentiometerImpl(pinPot);
   motor->on();
   motor->setPosition(0);
-  timeChangeLedR = 0;
   attachInterrupt(digitalPinToInterrupt(pinBtn), buttonHandler, RISING);
-  manualControl = false;
-  state = NORMAL;
+  setNormalState();
 }
 
 void WaterLevelTask::tick(){
   distance = (int)(sonar->getDistance()*100);
-  state = distance > WL_NORMAL ? NORMAL : distance > WL_PRE_ALARM ? PRE_ALARM : ALARM;
-  MsgService.sendMsg("state: " + String(state));
-  if (preState == ALARM && state != ALARM){
-    manualControl = false;
-    smartLight->setActive(true);
-    motor->setPosition(0);
-  }
-  if (preState != ALARM && state == ALARM){
-    manualControl = false;
-  }
-  preState = state;
   
   switch (state){
     case NORMAL:
-      Task::init(SAMPLING_NORMAL);
-      ledG->switchOn();
-      ledR->switchOff();
-      lcd->noBacklight();
-      break;
-    case PRE_ALARM:
-      Task::init(SAMPLING_PRE_ALARM);
-      ledG->switchOn();
-      blinkLedR();
-      displayPreAlarm();
-      break;
-    case ALARM:
-      Task::init(SAMPLING_ALARM);
-      smartLight->setActive(false);
-      ledG->switchOff();
-      ledR->switchOn();
-      //from 10 to 1000 instead 0 to 1023 because the voltage drop on the potentiometer never reaches perfectly 5 or 0V.
-      int angle = manualControl ? map(potentiometer->getAdjustment(), 10, 1000, 0, 180) :  map(distance, WL_PRE_ALARM, WL_MAX, 0, 180);//fare macro
-      if (MsgService.isMsgAvailable()){
-        Msg* msg = MsgService.receiveMsg();
-        String string = msg->getContent();
-        angle = string.toInt();
-        delete msg;
+      if (distance <= WL_NORMAL && distance > WL_PRE_ALARM){//PRE_ALARM
+        setPreAlarmState();
+      } else if (distance <= WL_PRE_ALARM){//ALARM
+        setAlarmState();
       }
-      motor->setPosition(angle);
-      displayAlarm();
+      break;
+
+    case PRE_ALARM:
+      if(distance > WL_NORMAL){//NORMAL
+        setNormalState();
+      } else if(distance <= WL_PRE_ALARM){//ALARM
+        setAlarmState();
+      } else {
+        blinkLedR();
+        displayPreAlarm();
+      }
+      break;
+
+    case ALARM:
+      if (distance > WL_PRE_ALARM){
+        motor->setPosition(0);
+        smartLight->setActive(true);
+        if(distance > WL_NORMAL){//NORMAL
+          setNormalState();
+        } else if (distance <= WL_NORMAL && distance > WL_PRE_ALARM){//PRE_ALARM
+          setPreAlarmState();
+        }
+      } else {
+        int angle = manualControl ? map(potentiometer->getAdjustment(), 10, 1000, 0, 180) :  map(distance, WL_PRE_ALARM, WL_MAX, 0, 180);//fare macro
+        motor->setPosition(angle);
+        displayAlarm();
+      }
       break;
   }
+  MsgService.sendMsg("state: " + String(state));
+}
+
+void WaterLevelTask::setNormalState(){
+  ledG->switchOn();
+  ledR->switchOff();
+  lcd->noBacklight();
+  Task::init(SAMPLING_NORMAL);
+  state = NORMAL;
+}
+
+void WaterLevelTask::setPreAlarmState(){
+  timeChangeLedR = 0;
+  ledG->switchOn();
+  blinkLedR();
+  displayPreAlarm();
+  Task::init(SAMPLING_PRE_ALARM);
+  state = PRE_ALARM;
+}
+
+void WaterLevelTask::setAlarmState(){
+  ledR->switchOn();
+  ledG->switchOff();
+  smartLight->setActive(false);
+  manualControl = false;
+  int angle = manualControl ? map(potentiometer->getAdjustment(), 10, 1000, 0, 180) :  map(distance, WL_PRE_ALARM, WL_MAX, 0, 180);//fare macro
+  if (MsgService.isMsgAvailable()){
+    Msg* msg = MsgService.receiveMsg();
+    String string = msg->getContent();
+    angle = string.toInt();
+    delete msg;
+  }
+  motor->setPosition(angle);
+  displayAlarm();
+  Task::init(SAMPLING_ALARM);
+  state = ALARM;
 }
 
 void WaterLevelTask::blinkLedR(){
@@ -95,6 +124,7 @@ void WaterLevelTask::blinkLedR(){
 }
 
 void WaterLevelTask::displayPreAlarm(){
+  lcd->backlight();
   lcd->clear();
   lcd->backlight();
   lcd->print("PRE ALARM");
@@ -102,6 +132,7 @@ void WaterLevelTask::displayPreAlarm(){
   lcd->print("Water Level: ");
   lcd->print(distance);
 }
+
 
 void WaterLevelTask::displayAlarm(){
   lcd->backlight();

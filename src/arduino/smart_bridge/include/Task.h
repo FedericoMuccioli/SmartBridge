@@ -1,7 +1,9 @@
 #ifndef __TASK__
 #define __TASK__
 
-class Task {
+#include "Active.h"
+
+class Task : public Active {
   int myPeriod;
   int timeElapsed;
   bool active;

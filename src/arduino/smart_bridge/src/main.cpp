@@ -3,17 +3,22 @@
 #include "SmartLightingTask.h"
 #include "WaterLevelTask.h"
 #include "MsgService.h"
+#include "SmartLighting.h"
 
 #define BOUND 9600
 #define SCHEDULER_PERIOD 100
 
 Scheduler sched;
+SmartLighting* smartLighting;
 
 void setup ( )
 {
-  MsgService.init(BOUND);
   sched.init(SCHEDULER_PERIOD);
-  SmartLightingTask* smartLight= new SmartLightingTask(7, 5, A0);
+  MsgService.init(BOUND);
+  
+  smartLighting = new SmartLighting();
+
+  Task* smartLight= new SmartLightingTask(smartLighting);
   Task* waterLevel = new WaterLevelTask(3,4,13,12,11,0x27,20,4,2,A2,smartLight);
   smartLight->init(100);
   waterLevel->init(SAMPLING_NORMAL);

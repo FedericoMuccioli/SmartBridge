@@ -8,9 +8,9 @@ PirSensorImpl::PirSensorImpl(int pin){
 
 bool PirSensorImpl::isMoved(){
   bool isMoved = (digitalRead(pin) == HIGH);
-  /*
-  Serial.print("isMoved? ");//debug
-  Serial.println(isMoved);//debug
+  /*debug
+  Serial.print("isMoved? ");
+  Serial.println(isMoved);
   */
   return isMoved;
 }
