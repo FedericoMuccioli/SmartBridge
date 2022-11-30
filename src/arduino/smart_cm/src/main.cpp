@@ -2,6 +2,9 @@
 #include "Scheduler.h"
 #include "SmartLightingTask.h"
 #include "WaterLevelTask.h"
+#include "MsgService.h"
+
+#define BOUND 9600
 /*
 #include "Led.h"
 #include "LightSensorImpl.h"
@@ -30,7 +33,7 @@ Potentiometer* potentiometer;
 
 void setup ( )
 {
-  Serial.begin(9600);
+  MsgService.init(BOUND);
   sched.init(100);
   SmartLightingTask* smartLight= new SmartLightingTask(7, 5, A0);
   Task* waterLevel = new WaterLevelTask(3,4,13,12,11,0x27,20,4,2,A2,smartLight);

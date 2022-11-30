@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include "SmartLightingTask.h"
+#include "MsgService.h"
 
 
 SmartLightingTask::SmartLightingTask(int pinLed, int pinPir, int pinLight){
@@ -35,12 +36,15 @@ void SmartLightingTask::tick(){
       }
       break;
   }
+  //MsgService.sendMsg("light: " + String(state));
 }
 
   void SmartLightingTask::setActive(bool active){
     if (!active){
       led->switchOff();
+      state = OFF;
       time = 0;
+      MsgService.sendMsg("light: " + String(state));
     }
     Task::setActive(active);
   }

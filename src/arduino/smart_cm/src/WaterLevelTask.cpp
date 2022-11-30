@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include "WaterLevelTask.h"
+#include "MsgService.h"
 
 bool manualControl;
 
@@ -43,6 +44,7 @@ void WaterLevelTask::init(int period){
 void WaterLevelTask::tick(){
   distance = (int)(sonar->getDistance()*100);
   state = distance > WL_NORMAL ? NORMAL : distance > WL_PRE_ALARM ? PRE_ALARM : ALARM;
+  MsgService.sendMsg("state: " + String(state));
   if (preState == ALARM && state != ALARM){
     manualControl = false;
     smartLight->setActive(true);
@@ -73,6 +75,12 @@ void WaterLevelTask::tick(){
       ledR->switchOn();
       //from 10 to 1000 instead 0 to 1023 because the voltage drop on the potentiometer never reaches perfectly 5 or 0V.
       int angle = manualControl ? map(potentiometer->getAdjustment(), 10, 1000, 0, 180) :  map(distance, WL_PRE_ALARM, WL_MAX, 0, 180);//fare macro
+      if (MsgService.isMsgAvailable()){
+        Msg* msg = MsgService.receiveMsg();
+        String string = msg->getContent();
+        angle = string.toInt();
+        delete msg;
+      }
       motor->setPosition(angle);
       displayAlarm();
       break;
