@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import org.jfree.chart.ChartFactory;
@@ -18,15 +19,15 @@ import org.jfree.data.time.Millisecond;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.xy.XYDataset;
-import org.jfree.ui.ApplicationFrame;
-import org.jfree.ui.RefineryUtilities;
+//import org.jfree.ui.ApplicationFrame;
+//import org.jfree.ui.RefineryUtilities;
 
 /**
  * A demonstration application showing a time series chart where you can dynamically add
  * (random) data by clicking on a button.
  *
  */
-public class prova extends ApplicationFrame implements ActionListener {
+public class prova extends JFrame implements ActionListener {
 
     /** The time series data. */
     private TimeSeries series;
@@ -41,10 +42,10 @@ public class prova extends ApplicationFrame implements ActionListener {
      *
      * @param title  the frame title.
      */
-    public DynamicDataDemo(final String title) {
+    public prova(final String title) {
 
         super(title);
-        this.series = new TimeSeries("Random Data", Millisecond.class);
+        this.series = new TimeSeries("Random Data");
         final TimeSeriesCollection dataset = new TimeSeriesCollection(this.series);
         final JFreeChart chart = createChart(dataset);
 
@@ -122,6 +123,7 @@ public class prova extends ApplicationFrame implements ActionListener {
      * @param args  ignored.
      * @throws InterruptedException 
      */
+    /*
     public static void main(final String[] args) throws InterruptedException {
 
         final DynamicDataDemo demo = new DynamicDataDemo("Dynamic Data Demo");
@@ -134,7 +136,7 @@ public class prova extends ApplicationFrame implements ActionListener {
         }
         
     }
-
+*/
 }
 
 
