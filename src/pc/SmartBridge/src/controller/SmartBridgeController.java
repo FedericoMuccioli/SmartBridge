@@ -8,17 +8,19 @@ public class SmartBridgeController implements Controller {
 
 	public SmartBridgeController(final String port, final int baud) throws Exception {
 		messageController = new MessageControllerImpl(new SerialCommChannel(port, baud));
-		System.out.println("Waiting Arduino for rebooting...");		
-		Thread.sleep(10000);
+		System.out.println("Waiting Arduino for rebooting...");
+		Thread.sleep(5000);
 		System.out.println("Ready.");
 	}
 	
 	public void start() throws InterruptedException {//togliere eccezione
 		while(true) {
-			System.out.println("light: " + messageController.getSmartLightingState());
-			System.out.println("water: " + messageController.getWaterLevelState());
-			System.out.println("waterL: " + messageController.getWaterLevel());
-			Thread.sleep(1000);
+			//System.out.println("light: " + messageController.getSmartLightingState());
+			//System.out.println("water: " + messageController.getWaterLevelState());
+			int waterL = messageController.getWaterLevel();
+			if(waterL >= 0) {
+				System.out.println("waterL: " + waterL);
+			}
 		}
 	}
 	

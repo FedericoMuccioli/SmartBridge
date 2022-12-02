@@ -11,6 +11,7 @@ public class SmartBridge {
 		//fare check numero argomenti
 		final String port = args[0];
 		final int baud = Integer.parseInt(args[1]);
+		//mettere qui il SerialCommChannel e passarlo al controller
 		SmartBridgeController smartBridgeController = new SmartBridgeController(port, baud);
 		smartBridgeController.start();
 		

@@ -28,7 +28,7 @@ void SmartLightingTask::tick(){
       }
       break;
   }
-  //MsgService.sendMsg("light: " + String(state));
+  MsgService.sendMsg("l" + String(state));
 }
 
 void SmartLightingTask::setActive(bool active){//sistemare

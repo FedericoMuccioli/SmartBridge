@@ -13,7 +13,7 @@ public class MessageControllerImpl implements MessageController {
 		this.commChannel = commChannel;
 		smartLightState = 0;
 		waterLevelState = 0;
-		waterLevel = 0;
+		waterLevel = -1;
 	}
 
 	@Override
@@ -41,6 +41,7 @@ public class MessageControllerImpl implements MessageController {
 	}
 	
 	private void updateValues() throws InterruptedException {
+		waterLevel = -1;
 		while(commChannel.isMsgAvailable()) {
 			final String msg = commChannel.receiveMsg();
 			updateValue(msg);
@@ -48,7 +49,7 @@ public class MessageControllerImpl implements MessageController {
 	}
 	
 	private void updateValue(final String msg) {
-		if( msg.length() == 0) {
+		if(msg.length() == 0) {
 			return;
 		}
 		char typeValue = msg.charAt(0);
