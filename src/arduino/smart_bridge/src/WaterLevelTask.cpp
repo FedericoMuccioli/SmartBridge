@@ -65,7 +65,7 @@ void WaterLevelTask::tick(){
           setPreAlarmState();
         }
       } else {
-        int angle = manualControl->isActive() ? map(manualControl->getValue(), 10, 1000, 0, 180) :  map(distance, WL_PRE_ALARM, WL_MAX, 0, 180);//fare macro
+        int angle = manualControl->isActive() ? manualControl->getValue() :  map(distance, WL_PRE_ALARM, WL_MAX, 0, 180);//fare macro
         motor->setPosition(angle);
         displayAlarm();
       }

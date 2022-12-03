@@ -6,37 +6,29 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 
+import controller.SmartBridgeController;
+
 
 public class MotorPositionPanel extends JPanel {
 	
 	private final JSlider slider;	
 	
-	public MotorPositionPanel() {
+	public MotorPositionPanel(final SmartBridgeController sBC) {
 		this.setLayout(new GridBagLayout());
 		slider = new JSlider(JSlider.HORIZONTAL, 0, 180, 0);
 		slider.setMajorTickSpacing(30);
 		slider.setPaintTicks(true);
 		slider.setPaintLabels(true);
 		
-		slider.addChangeListener((e)-> {
-			
-			    JSlider source = (JSlider)e.getSource();
-			    if (!source.getValueIsAdjusting()) {
-			        int value = (int)source.getValue();
-			        System.out.println(value);
-			    }
-			
-		});
-		
 		final var button = new JButton("Manual Control");
+		button.addActionListener((e)->sBC.switchManualControl());
 		
 		this.add(slider, getGbc(0,0,1,2));
 		this.add(button, getGbc(0,2,1,1));
-		
 	}
 	
 	public int getPosition() {
-		return 0;
+		return slider.getValue();
 	}
 	
 	private GridBagConstraints getGbc(final int x, final int y, final int width, final int height) {

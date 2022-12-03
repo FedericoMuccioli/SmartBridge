@@ -16,4 +16,6 @@ public interface MessageController extends Controller {
 	
 	int getWaterLevel() throws InterruptedException;
 	
+	void setPosition(int position);
+	
 }

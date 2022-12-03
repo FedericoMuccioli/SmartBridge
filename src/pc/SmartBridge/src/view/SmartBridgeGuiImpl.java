@@ -6,6 +6,7 @@ import java.awt.GridBagLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import controller.SmartBridgeController;
 import view.panel.MotorPositionPanel;
 import view.panel.SmartLightingStatePanel;
 import view.panel.WaterLevelPanel;
@@ -20,13 +21,13 @@ public class SmartBridgeGuiImpl implements SmartBridgeGui {
 	private final MotorPositionPanel motorPosition;
 	
 	
-	public SmartBridgeGuiImpl() {
+	public SmartBridgeGuiImpl(final SmartBridgeController sBC) {
 		frame = new JFrame();
 		final JPanel panel = new JPanel(new GridBagLayout());
 		smartLightingState = new SmartLightingStatePanel();
 		waterLevelState = new WaterLevelStatePanel();
 		waterLevel = new WaterLevelPanel();
-		motorPosition = new MotorPositionPanel();
+		motorPosition = new MotorPositionPanel(sBC);
 		
 		panel.add(waterLevel, getGbc(0,0,2,3));
 		panel.add(smartLightingState, getGbc(2,0,1,1));
@@ -69,9 +70,8 @@ public class SmartBridgeGuiImpl implements SmartBridgeGui {
 	}
 
 	@Override
-	public int getWaterLevel() {
-		// TODO Auto-generated method stub
-		return 0;
+	public int getPosition() {
+		return motorPosition.getPosition();
 	}
 
 }

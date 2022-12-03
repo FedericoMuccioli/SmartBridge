@@ -79,15 +79,20 @@ public class MessageControllerImpl implements MessageController {
 			} else if (typeValue == 'w') {
 				waterLevelState=Integer.valueOf(value);
 				isWaterMsg = true;
-			} else {
+			} else if (typeValue == 'v'){
 				waterLevel=Integer.valueOf(value);
 				isWaterLevelMsg = true;
-		}
+			} else {
+				System.out.println(msg);
+			}
 		} catch (Exception e) {
 			return;
 		}
 	}
 
-
+	@Override
+	public void setPosition(final int position) {
+		commChannel.sendMsg(String.valueOf(position));
+	}
 
 }

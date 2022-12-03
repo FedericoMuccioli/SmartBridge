@@ -8,6 +8,6 @@ public interface SmartBridgeGui {
 	
 	void setWaterLevel(int waterLevel);
 	
-	int getWaterLevel();
+	int getPosition();
 
 }

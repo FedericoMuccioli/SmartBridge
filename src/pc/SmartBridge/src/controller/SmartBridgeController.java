@@ -8,17 +8,29 @@ public class SmartBridgeController implements Controller {
 	
 	private final MessageController messageController;
 	private final SmartBridgeGuiImpl gui;
+	private boolean manualControl;
 
 	public SmartBridgeController(final String port, final int baud) throws Exception {
 		messageController = new MessageControllerImpl(new SerialCommChannel(port, baud));
 		System.out.println("Waiting Arduino for rebooting...");
 		Thread.sleep(5000);
 		System.out.println("Ready.");
-		gui = new SmartBridgeGuiImpl();
+		gui = new SmartBridgeGuiImpl(this);
+		manualControl = false;
 	}
 	
 	public void start() throws InterruptedException {//togliere eccezione
-		
+		new java.util.Timer().schedule( 
+		        new java.util.TimerTask() {
+		            @Override
+		            public void run() {
+		            	if(manualControl) {
+		            		messageController.setPosition(gui.getPosition());
+		            	}
+		            }
+		        }, 0,
+		        1000
+		);
 		while(true) {
 			messageController.updateMsg();
 			if(messageController.isWaterLevelMsg()) {
@@ -34,7 +46,9 @@ public class SmartBridgeController implements Controller {
 		}
 	}
 	
-	
+	public void switchManualControl() {
+		manualControl = !manualControl;
+	}
 	
 	
 	@Override
