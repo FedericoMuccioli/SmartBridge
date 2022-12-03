@@ -1,4 +1,4 @@
-package view;
+package view.panel;
 
 
 
@@ -27,7 +27,7 @@ import org.jfree.data.xy.XYDataset;
  * (random) data by clicking on a button.
  *
  */
-public class prova extends JFrame implements ActionListener {
+public class WaterLevelPanel extends JPanel implements ActionListener {
 
     /** The time series data. */
     private TimeSeries series;
@@ -42,9 +42,7 @@ public class prova extends JFrame implements ActionListener {
      *
      * @param title  the frame title.
      */
-    public prova(final String title) {
-
-        super(title);
+    public WaterLevelPanel() {
         this.series = new TimeSeries("Random Data");
         final TimeSeriesCollection dataset = new TimeSeriesCollection(this.series);
         final JFreeChart chart = createChart(dataset);
@@ -53,12 +51,10 @@ public class prova extends JFrame implements ActionListener {
         button = new JButton("Add New Data Item");
         button.setActionCommand("ADD_DATA");
         button.addActionListener(this);
-        final JPanel content = new JPanel(new BorderLayout());
-        content.add(chartPanel);
-        content.add(button, BorderLayout.SOUTH);
+        this.setLayout(new BorderLayout());
+        this.add(chartPanel);
+        this.add(button, BorderLayout.SOUTH);
         chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
-        setContentPane(content);
-
     }
 
     /**
