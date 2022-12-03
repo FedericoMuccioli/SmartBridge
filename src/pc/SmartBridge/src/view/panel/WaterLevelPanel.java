@@ -37,7 +37,6 @@ public class WaterLevelPanel extends JPanel {
 
         this.setLayout(new BorderLayout());
         final ChartPanel chartPanel = new ChartPanel(chart);
-        this.series.add(new Millisecond(), this.lastValue);
         this.add(chartPanel);
     }
 
@@ -65,6 +64,10 @@ public class WaterLevelPanel extends JPanel {
         axis = plot.getRangeAxis();
         axis.setRange(0.0, 200.0);
         return result;
+    }
+    
+    public void printWaterLevel(final int waterLevel) {
+    	series.add(new Millisecond(), waterLevel);
     }
 }
 

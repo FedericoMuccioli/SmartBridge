@@ -18,8 +18,8 @@ public abstract class StatePanel extends JPanel {
 		this.add(value);
 	}
 	
-	public void setState(final String state) {
-		value.setText(state);
+	public void setState(final int state) {
+		value.setText(String.valueOf(state));
 	}
 
 }

@@ -32,11 +32,8 @@ public class SmartBridgeGuiImpl implements SmartBridgeGui {
 		panel.add(smartLightingState, getGbc(2,0,1,1));
 		panel.add(waterLevelState, getGbc(2,1,1,1));
 		panel.add(motorPosition, getGbc(2,2,1,1));
+		
 		frame.add(panel);
-		
- 		
-		
-		
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		frame.pack();
@@ -56,21 +53,19 @@ public class SmartBridgeGuiImpl implements SmartBridgeGui {
 		return gbc;
 	}
 	@Override
-	public void setSmartLightingState(int smartLightingState) {
-		// TODO Auto-generated method stub
+	public void setSmartLightingState(final int smartLightingState) {
+		this.smartLightingState.setState(smartLightingState);
+	}
+
+	@Override
+	public void setWaterLevelState(final int waterLevelState) {
+		this.waterLevelState.setState(waterLevelState);
 		
 	}
 
 	@Override
-	public void setWaterLevelState(int waterLevelState) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void setWaterLevel(int waterLevel) {
-		// TODO Auto-generated method stub
-		
+	public void setWaterLevel(final int value) {
+		this.waterLevel.printWaterLevel(value);
 	}
 
 	@Override

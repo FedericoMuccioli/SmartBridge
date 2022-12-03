@@ -71,7 +71,7 @@ void WaterLevelTask::tick(){
       }
       break;
   }
-  //MsgService.sendMsg("w" + String(state));
+  MsgService.sendMsg("w" + String(state));
   MsgService.sendMsg("v" + String(distance));
 }
 

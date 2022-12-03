@@ -8,7 +8,7 @@ public class SmartBridge {
 	//private static final String PORT = "/dev/tty.usbmodem11401";
 	public static void main(String[] args) throws Exception {
 		
-		//fare check numero argomenti
+		//fare check argomenti
 		final String port = args[0];
 		final int baud = Integer.parseInt(args[1]);
 		//mettere qui il SerialCommChannel e passarlo al controller
