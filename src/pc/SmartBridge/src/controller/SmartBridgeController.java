@@ -8,7 +8,6 @@ public class SmartBridgeController implements Controller {
 	
 	private final MessageController messageController;
 	private final SmartBridgeGuiImpl gui;
-	private boolean checkManualControl;
 	private boolean manualControl;
 
 	public SmartBridgeController(final String port, final int baud) throws Exception {
@@ -17,7 +16,6 @@ public class SmartBridgeController implements Controller {
 		Thread.sleep(5000);
 		System.out.println("Ready.");
 		gui = new SmartBridgeGuiImpl(this);
-		checkManualControl = false;
 		manualControl = false;
 	}
 	
@@ -44,28 +42,17 @@ public class SmartBridgeController implements Controller {
 			if(messageController.isLightMsg()) {
 				gui.setSmartLightingState(messageController.getSmartLightingState());
 			}
-			if(messageController.switchCheckControl()) {
-				checkManualControl = !checkManualControl;
-				if(!checkManualControl) {
-					gui.setManualControl(false);
-					manualControl = false;
-				}
+			if(messageController.isSwitchControl()) {
+				manualControl = messageController.getManualControl();
+				gui.setManualControl(manualControl);
 			}
 			
 		}
 	}
 	
-	public void switchManualControl() {
-		if(checkManualControl) {
-			manualControl = !manualControl;
-			if(manualControl) {
-				gui.setManualControl(true);
-			} else {
-				gui.setManualControl(false);
-			}
-		}
+	public void switchManualControl(final int position) {
+		messageController.buttonPressed(position);
 	}
-	
 	
 	@Override
 	public void close() {

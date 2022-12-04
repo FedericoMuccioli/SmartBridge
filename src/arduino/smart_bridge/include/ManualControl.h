@@ -7,13 +7,14 @@
 class ManualControl {
 
 private:
-  Button* button;
-  Potentiometer* potentiometer;
+  bool active;
+  int value;
 
 public:
   ManualControl();
-  void startCheck();
-  void endCheck();
+  void init();
+  void setValue(int value);
+  void setActive(bool active);
   bool isActive();
   int getValue();
 };

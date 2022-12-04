@@ -8,10 +8,11 @@ public class MessageControllerImpl implements MessageController {
 	private int smartLightState;
 	private int waterLevelState;
 	private int waterLevel;
+	private boolean manualControl;
 	private boolean isLightMsg;
 	private boolean isWaterMsg;
 	private boolean isWaterLevelMsg;
-	private boolean switchCheckControl;
+	private boolean isSwitchControl;
 
 	public MessageControllerImpl(final CommChannel commChannel) {
 		this.commChannel = commChannel;
@@ -21,7 +22,7 @@ public class MessageControllerImpl implements MessageController {
 		isLightMsg = false;
 		isWaterMsg = false;
 		isWaterLevelMsg = false;
-		switchCheckControl = false;
+		isSwitchControl = false;
 	}
 	
 	@Override
@@ -48,12 +49,8 @@ public class MessageControllerImpl implements MessageController {
 	}
 	
 	@Override
-	public boolean switchCheckControl() {
-		if (switchCheckControl) {
-			switchCheckControl = false;
-			return true;
-		}
-		return false;
+	public boolean isSwitchControl() {
+		return isSwitchControl;
 	}
 
 	@Override
@@ -75,6 +72,12 @@ public class MessageControllerImpl implements MessageController {
 	}
 	
 	@Override
+	public boolean getManualControl() throws InterruptedException {
+		isSwitchControl = false;
+		return manualControl;
+	}
+	
+	@Override
 	public void close() {
 		// TODO Auto-generated method stub
 		
@@ -93,8 +96,9 @@ public class MessageControllerImpl implements MessageController {
 			} else if (typeValue == 'v'){
 				waterLevel=Integer.valueOf(value);
 				isWaterLevelMsg = true;
-			} else if (typeValue == 'b'){
-				switchCheckControl = true;
+			} else if (typeValue == 'c'){
+				manualControl = Boolean.valueOf(value);
+				isSwitchControl = true;
 			} else {
 				System.out.println(msg);
 			}
@@ -103,6 +107,11 @@ public class MessageControllerImpl implements MessageController {
 		}
 	}
 
+	@Override
+	public void buttonPressed(final int position) {
+		commChannel.sendMsg("-".concat(String.valueOf(position)));
+	}
+	
 	@Override
 	public void setPosition(final int position) {
 		commChannel.sendMsg(String.valueOf(position));

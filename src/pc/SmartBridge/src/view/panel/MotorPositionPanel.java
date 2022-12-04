@@ -22,7 +22,7 @@ public class MotorPositionPanel extends JPanel {
 		slider.setPaintLabels(true);
 		
 		button = new JButton("Manual Control OFF");
-		button.addActionListener((e)->sBC.switchManualControl());
+		button.addActionListener((e)->sBC.switchManualControl(getPosition()));
 		
 		this.add(slider, getGbc(0,0,1,2));
 		this.add(button, getGbc(0,2,1,1));

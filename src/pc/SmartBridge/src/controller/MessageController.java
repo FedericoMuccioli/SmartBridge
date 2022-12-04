@@ -18,6 +18,10 @@ public interface MessageController extends Controller {
 	
 	void setPosition(int position);
 
-	boolean switchCheckControl();
+	void buttonPressed(int position);
+
+	boolean isSwitchControl();
+
+	boolean getManualControl() throws InterruptedException;
 	
 }

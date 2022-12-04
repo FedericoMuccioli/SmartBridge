@@ -30,11 +30,11 @@ void MsgServiceClass::init(int bound){
 }
 
 void MsgServiceClass::sendMsg(const String& msg){
-  Serial.println(msg);  
+  Serial.println(msg);
 }
 
 void MsgServiceClass::sendMsg(const Msg& msg){
-  Serial.println(msg.getContent());  
+  Serial.println(msg.getContent());
 }
 
 void serialEvent() {

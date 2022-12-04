@@ -3,9 +3,10 @@
 #include "MsgService.h"
 
 
+//unsigned long time; //cancellare
 
 WaterLevelTask::WaterLevelTask(int pinLedG, int pinLedR, int pinTrigSonar, int pinEchoSonar, 
-    int pinMotor, int addrLcd, int rowsLcd, int colsLcd, Active* smartLight){
+    int pinMotor, int addrLcd, int rowsLcd, int colsLcd, Active* smartLight, ManualControlTask* manualControlTask, ManualControl* manualControl){
   this->pinLedG = pinLedG;
   this->pinLedR = pinLedR;
   this->pinTrigSonar = pinTrigSonar;
@@ -15,6 +16,9 @@ WaterLevelTask::WaterLevelTask(int pinLedG, int pinLedR, int pinTrigSonar, int p
   this->colsLcd = colsLcd;
   this->rowsLcd = rowsLcd;
   this->smartLight = smartLight;
+  this->manualControl = manualControl;
+  this->manualControlTask = manualControlTask;
+
 }
   
 void WaterLevelTask::init(int period){
@@ -27,13 +31,12 @@ void WaterLevelTask::init(int period){
   lcd->init();
   motor->on();
   motor->setPosition(0);
-  manualControl = new ManualControl();
+  manualControlTask->setActive(false);
   setNormalState();
 }
 
 void WaterLevelTask::tick(){
   distance = (int)(sonar->getDistance()*100);
-  
   switch (state){
     case NORMAL:
       if (distance <= WL_NORMAL && distance > WL_PRE_ALARM){//PRE_ALARM
@@ -58,7 +61,7 @@ void WaterLevelTask::tick(){
       if (distance > WL_PRE_ALARM){
         motor->setPosition(0);
         smartLight->setActive(true);
-        manualControl->endCheck();
+        manualControlTask->setActive(false);
         if(distance > WL_NORMAL){//NORMAL
           setNormalState();
         } else if (distance <= WL_NORMAL && distance > WL_PRE_ALARM){//PRE_ALARM
@@ -96,8 +99,7 @@ void WaterLevelTask::setAlarmState(){
   ledR->switchOn();
   ledG->switchOff();
   smartLight->setActive(false);
-  //manualControl = false;
-  manualControl->startCheck();
+  manualControlTask->setActive(true);
   int angle = manualControl->isActive() ? map(manualControl->getValue(), 10, 1000, 0, 180) :  map(distance, WL_PRE_ALARM, WL_MAX, 0, 180);//fare macro
   if (MsgService.isMsgAvailable()){
     Msg* msg = MsgService.receiveMsg();
