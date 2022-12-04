@@ -24,16 +24,17 @@ ManualControl::ManualControl(){
 
 void ManualControl::startCheck(){
   manualControl = false;
-  manualControlJava = false;//
+  manualControlJava = false;
   if (MsgService.isMsgAvailable()){
     delete MsgService.receiveMsg();//svuoto buffer
   }
-  
+  MsgService.sendMsg("b");
   attachInterrupt(digitalPinToInterrupt(BUTTON_PIN), buttonHandler, RISING);
 }
 
 void ManualControl::endCheck(){
   detachInterrupt(digitalPinToInterrupt(BUTTON_PIN));
+  MsgService.sendMsg("b");
 }
 
 bool ManualControl::isActive(){

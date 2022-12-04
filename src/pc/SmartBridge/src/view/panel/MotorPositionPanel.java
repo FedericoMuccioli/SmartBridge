@@ -12,6 +12,7 @@ import controller.SmartBridgeController;
 public class MotorPositionPanel extends JPanel {
 	
 	private final JSlider slider;	
+	private final JButton button;
 	
 	public MotorPositionPanel(final SmartBridgeController sBC) {
 		this.setLayout(new GridBagLayout());
@@ -20,7 +21,7 @@ public class MotorPositionPanel extends JPanel {
 		slider.setPaintTicks(true);
 		slider.setPaintLabels(true);
 		
-		final var button = new JButton("Manual Control");
+		button = new JButton("Manual Control OFF");
 		button.addActionListener((e)->sBC.switchManualControl());
 		
 		this.add(slider, getGbc(0,0,1,2));
@@ -29,6 +30,14 @@ public class MotorPositionPanel extends JPanel {
 	
 	public int getPosition() {
 		return slider.getValue();
+	}
+	
+	public void setManualControl(boolean manualControl) {
+		if(manualControl) {
+			button.setText("Manual Control ON");
+		} else {
+			button.setText("Manual Control OFF");
+		}
 	}
 	
 	private GridBagConstraints getGbc(final int x, final int y, final int width, final int height) {

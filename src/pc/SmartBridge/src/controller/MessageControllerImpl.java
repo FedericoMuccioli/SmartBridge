@@ -11,6 +11,7 @@ public class MessageControllerImpl implements MessageController {
 	private boolean isLightMsg;
 	private boolean isWaterMsg;
 	private boolean isWaterLevelMsg;
+	private boolean switchCheckControl;
 
 	public MessageControllerImpl(final CommChannel commChannel) {
 		this.commChannel = commChannel;
@@ -20,6 +21,7 @@ public class MessageControllerImpl implements MessageController {
 		isLightMsg = false;
 		isWaterMsg = false;
 		isWaterLevelMsg = false;
+		switchCheckControl = false;
 	}
 	
 	@Override
@@ -43,6 +45,15 @@ public class MessageControllerImpl implements MessageController {
 	@Override
 	public boolean isWaterLevelMsg() {
 		return isWaterLevelMsg;
+	}
+	
+	@Override
+	public boolean switchCheckControl() {
+		if (switchCheckControl) {
+			switchCheckControl = false;
+			return true;
+		}
+		return false;
 	}
 
 	@Override
@@ -82,6 +93,8 @@ public class MessageControllerImpl implements MessageController {
 			} else if (typeValue == 'v'){
 				waterLevel=Integer.valueOf(value);
 				isWaterLevelMsg = true;
+			} else if (typeValue == 'b'){
+				switchCheckControl = true;
 			} else {
 				System.out.println(msg);
 			}

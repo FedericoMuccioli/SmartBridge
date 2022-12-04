@@ -74,4 +74,8 @@ public class SmartBridgeGuiImpl implements SmartBridgeGui {
 		return motorPosition.getPosition();
 	}
 
+	public void setManualControl(boolean manualControl) {
+		motorPosition.setManualControl(manualControl);
+	}
+
 }
