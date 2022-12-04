@@ -1,7 +1,7 @@
 #ifndef __SMARTLIGHTINGTASK__
 #define __SMARTLIGHTINGTASK__
 
-#include "Task.h"
+#include "kernel/Task.h"
 #include "SmartLighting.h"
 
 class SmartLightingTask: public Task {

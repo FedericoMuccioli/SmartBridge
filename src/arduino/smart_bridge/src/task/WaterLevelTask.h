@@ -1,13 +1,13 @@
 #ifndef __WATERLEVELTASK__
 #define __WATERLEVELTASK__
 
-#include "Task.h"
-#include "Led.h"
-#include "SonarImpl.h"
-#include "ServoMotorImpl.h"
+#include "kernel/Task.h"
+#include "devices/Led.h"
+#include "devices/SonarImpl.h"
+#include "devices/ServoMotorImpl.h"
 #include <LiquidCrystal_I2C.h>
-#include "ButtonImpl.h"
-#include "PotentiometerImpl.h"
+#include "devices/ButtonImpl.h"
+#include "devices/PotentiometerImpl.h"
 #include "SmartLightingTask.h"
 #include "ManualControl.h"
 #include "ManualControlTask.h"

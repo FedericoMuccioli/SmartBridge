@@ -1,8 +1,8 @@
 #ifndef __MANUALCONTROL__
 #define __MANUALCONTROL__
 
-#include "ButtonImpl.h"
-#include "PotentiometerImpl.h"
+#include "devices/ButtonImpl.h"
+#include "devices/PotentiometerImpl.h"
 
 class ManualControl {
 

@@ -7,11 +7,5 @@ ButtonImpl::ButtonImpl(int pin){
 } 
   
 bool ButtonImpl::isPressed(){
-  bool var =digitalRead(pin);
-  if(var == HIGH){
-    Serial.println("pressed");
-  }
-  return var == HIGH;
+  return digitalRead(pin) == HIGH;
 }
-
-

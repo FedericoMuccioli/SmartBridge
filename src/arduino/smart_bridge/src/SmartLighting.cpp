@@ -1,8 +1,8 @@
 #include <Arduino.h>
 #include "SmartLighting.h"
-#include "Led.h"
-#include "PirSensorImpl.h"
-#include "LightSensorImpl.h"
+#include "devices/Led.h"
+#include "devices/PirSensorImpl.h"
+#include "devices/LightSensorImpl.h"
 #include "config.h"
 
 

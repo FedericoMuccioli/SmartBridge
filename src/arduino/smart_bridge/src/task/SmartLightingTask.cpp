@@ -1,6 +1,6 @@
 #include <Arduino.h>
 #include "SmartLightingTask.h"
-#include "MsgService.h"
+#include "kernel/MsgService.h"
 
 SmartLightingTask::SmartLightingTask(SmartLighting* smartLighting){
   this->smartLighting = smartLighting;

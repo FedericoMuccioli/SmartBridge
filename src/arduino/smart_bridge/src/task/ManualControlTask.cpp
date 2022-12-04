@@ -1,9 +1,7 @@
 #include <Arduino.h>
 #include "ManualControlTask.h"
-#include "MsgService.h"
+#include "kernel/MsgService.h"
 #include "config.h"
-
-unsigned long time = 0;
 
 ManualControlTask::ManualControlTask(ManualControl* manualControl){
   this->manualControl = manualControl;
@@ -21,8 +19,6 @@ void ManualControlTask::init(int period){
 }
   
 void ManualControlTask::tick(){
-  Serial.println(millis()-time);
-  time = millis();
   switch (state){
     case OFF:
       if(MsgService.isMsgAvailable()){

@@ -1,9 +1,9 @@
 #ifndef __SMARTLIGHTING__
 #define __SMARTLIGHTING__
 
-#include "Led.h"
-#include "PirSensorImpl.h"
-#include "LightSensorImpl.h"
+#include "devices/Led.h"
+#include "devices/PirSensorImpl.h"
+#include "devices/LightSensorImpl.h"
 
 class SmartLighting {
 

@@ -1,7 +1,7 @@
 #ifndef __MANUALCONTROLTASK__
 #define __MANUALCONTROLTASK__
 
-#include "Task.h"
+#include "kernel/Task.h"
 #include "ManualControl.h"
 
 class ManualControlTask: public Task {

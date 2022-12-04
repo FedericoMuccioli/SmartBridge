@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include "ManualControl.h"
 #include "config.h"
-#include "MsgService.h"
+#include "kernel/MsgService.h"
 
 ManualControl::ManualControl(){
   active = false;

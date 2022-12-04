@@ -1,10 +1,10 @@
 #include <Arduino.h>
-#include "Scheduler.h"
-#include "SmartLightingTask.h"
-#include "WaterLevelTask.h"
-#include "MsgService.h"
+#include "kernel/Scheduler.h"
+#include "task/SmartLightingTask.h"
+#include "task/WaterLevelTask.h"
+#include "kernel/MsgService.h"
 #include "SmartLighting.h"
-#include "ManualControlTask.h"
+#include "task/ManualControlTask.h"
 #include "ManualControl.h"
 
 #define BOUND 9600
