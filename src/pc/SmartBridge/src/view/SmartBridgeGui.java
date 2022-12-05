@@ -2,12 +2,16 @@ package view;
 
 public interface SmartBridgeGui {
 	
-	void setSmartLightingState(int smartLightingState);
+	void setSmartLightingState(String smartLightingState);
 	
-	void setWaterLevelState(int waterLevelState);
+	void setWaterLevelState(String waterLevelState);
 	
 	void setWaterLevel(int waterLevel);
 	
 	int getPosition();
+
+	int isButtonPressed();
+
+	void setManualControl(boolean manualControl);
 
 }

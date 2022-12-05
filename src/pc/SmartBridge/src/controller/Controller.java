@@ -2,7 +2,7 @@ package controller;
 
 public interface Controller {
 	
-	public void close();
+	void start() throws InterruptedException;
 	
 
 }

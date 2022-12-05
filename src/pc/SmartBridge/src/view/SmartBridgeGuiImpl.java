@@ -21,13 +21,13 @@ public class SmartBridgeGuiImpl implements SmartBridgeGui {
 	private final MotorPositionPanel motorPosition;
 	
 	
-	public SmartBridgeGuiImpl(final SmartBridgeController sBC) {
+	public SmartBridgeGuiImpl() {
 		frame = new JFrame();
 		final JPanel panel = new JPanel(new GridBagLayout());
 		smartLightingState = new SmartLightingStatePanel();
 		waterLevelState = new WaterLevelStatePanel();
 		waterLevel = new WaterLevelPanel();
-		motorPosition = new MotorPositionPanel(sBC);
+		motorPosition = new MotorPositionPanel();
 		
 		panel.add(waterLevel, getGbc(0,0,2,3));
 		panel.add(smartLightingState, getGbc(2,0,1,1));
@@ -54,12 +54,12 @@ public class SmartBridgeGuiImpl implements SmartBridgeGui {
 		return gbc;
 	}
 	@Override
-	public void setSmartLightingState(final int smartLightingState) {
+	public void setSmartLightingState(final String smartLightingState) {
 		this.smartLightingState.setState(smartLightingState);
 	}
 
 	@Override
-	public void setWaterLevelState(final int waterLevelState) {
+	public void setWaterLevelState(final String waterLevelState) {
 		this.waterLevelState.setState(waterLevelState);
 		
 	}
@@ -74,8 +74,13 @@ public class SmartBridgeGuiImpl implements SmartBridgeGui {
 		return motorPosition.getPosition();
 	}
 
+	@Override
 	public void setManualControl(boolean manualControl) {
 		motorPosition.setManualControl(manualControl);
 	}
 
+	@Override
+	public int isButtonPressed() {
+		return motorPosition.isButtonPressed();
+	}
 }

@@ -1,6 +1,6 @@
 package controller;
 
-public interface MessageController extends Controller {
+public interface MessageController {
 	
 	void updateMsg() throws InterruptedException;
 	
@@ -10,9 +10,9 @@ public interface MessageController extends Controller {
 	
 	boolean isWaterLevelMsg();
 	
-	int getSmartLightingState() throws InterruptedException;
+	String getSmartLightingState() throws InterruptedException;
 	
-	int getWaterLevelState() throws InterruptedException;
+	String getWaterLevelState() throws InterruptedException;
 	
 	int getWaterLevel() throws InterruptedException;
 	

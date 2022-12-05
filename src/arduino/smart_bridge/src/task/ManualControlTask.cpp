@@ -7,6 +7,8 @@
 
 #define HARDWARE_CONTROL_VALUE map(pot->getAdjustment(), 30, 1000, 0, 180)
 
+#define MSG(state) (state == OFF ? String("false") : String("true"))
+
 ManualControlTask::ManualControlTask(ManualControl* manualControl){
   this->manualControl = manualControl;
   this->button = new ButtonImpl(BUTTON_PIN);
@@ -26,11 +28,10 @@ void ManualControlTask::tick(){
         String content = getContentMsg();
         if (content.indexOf('-') == 0){
           int value = -atoi(content.c_str());
-          String mode = "true";
-          MsgService.sendMsg(MANUAL_CONTROL_MSG + mode);
           manualControl->setActive(true);
           manualControl->setValue(value);
           state = SOFTWARE;
+          MsgService.sendMsg(MANUAL_CONTROL_MSG + MSG(state));
         }
       } else if (button->isPressed()){
         manualControl->setActive(true);
@@ -42,10 +43,9 @@ void ManualControlTask::tick(){
       if(MsgService.isMsgAvailable()){
         String content = getContentMsg();
         if (content.indexOf('-') == 0){
-          String mode = "false";
-          MsgService.sendMsg(MANUAL_CONTROL_MSG + mode);
           manualControl->setActive(false);
           state = OFF;
+          MsgService.sendMsg(MANUAL_CONTROL_MSG + MSG(state));
         } else {
           manualControl->setValue(atoi(content.c_str()));
         }
@@ -65,10 +65,9 @@ void ManualControlTask::tick(){
 
 void ManualControlTask::setActive(bool active){
   if (!active){
-    String mode = "false";
-    MsgService.sendMsg(MANUAL_CONTROL_MSG + mode);
-    manualControl->setActive(false);
     state = OFF;
+    MsgService.sendMsg(MANUAL_CONTROL_MSG + MSG(state));
+    manualControl->setActive(false);
   } else {
     emptyMsgBuffer();
   }

@@ -13,6 +13,7 @@
 #define IS_PRE_ALARM (distance <= NORMAL_WL && distance > PRE_ALARM_WL)
 #define IS_ALARM (distance <= PRE_ALARM_WL)
 #define AUTOMATIC_CONTROL_VALUE map(distance, PRE_ALARM_WL, MAX_WL, 0, 180)
+#define MSG(state) (state == NORMAL ? String("NORMAL") : state == PRE_ALARM ? String("PRE ALARM") : String("ALARM"))
 
 WaterLevelTask::WaterLevelTask(Active* smartLight, Active* manualControlTask, ManualControl* manualControl){
   this->smartLight = smartLight;
@@ -73,7 +74,7 @@ void WaterLevelTask::tick(){
       }
       break;
   }
-  MsgService.sendMsg(WATER_LEVEL_STATE_MSG + String(state));
+  MsgService.sendMsg(WATER_LEVEL_STATE_MSG + MSG(state));
   MsgService.sendMsg(WATER_LEVEL_MSG + String(distance));
 }
 

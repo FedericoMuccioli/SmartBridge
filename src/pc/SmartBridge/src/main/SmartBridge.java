@@ -1,47 +1,36 @@
 package main;
+import controller.Controller;
+import controller.MessageController;
+import controller.MessageControllerImpl;
 import controller.SmartBridgeController;
+import utility.CommChannel;
 import utility.SerialCommChannel;
+import view.SmartBridgeGui;
+import view.SmartBridgeGuiImpl;
 
 public class SmartBridge {
 	
 	//private static final int BAUD = 9600;
 	//private static final String PORT = "/dev/tty.usbmodem11401";
+	private static Controller controller;
+	private static CommChannel commChannel;
+	private static MessageController messageController;
+	private static SmartBridgeGui gui;
+	
 	public static void main(String[] args) throws Exception {
-		
-		//fare check argomenti
 		final String port = args[0];
 		final int baud = Integer.parseInt(args[1]);
-		//mettere qui il SerialCommChannel e passarlo al controller
-		SmartBridgeController smartBridgeController = new SmartBridgeController(port, baud);
-		smartBridgeController.start();
 		
-		/*
-		SerialCommChannel channel = new SerialCommChannel(PORT,BOUND);
-		//attesa necessaria per fare in modo che Arduino completi il reboot 
-		System.out.println("Waiting Arduino for rebooting...");		
-		Thread.sleep(10000);
-		System.out.println("Ready.");		
+		commChannel = new SerialCommChannel(port, baud);
+		System.out.println("Waiting Arduino for rebooting...");
+		Thread.sleep(5000);
+		System.out.println("Ready.");
 		
-		new java.util.Timer().schedule( 
-		        new java.util.TimerTask() {
-		            @Override
-		            public void run() {
-		            	channel.sendMsg("180");
-		            }
-		        }, 0,
-		        1000
-		);
+		messageController = new MessageControllerImpl(commChannel);
+		gui = new SmartBridgeGuiImpl();
+		controller = new SmartBridgeController(messageController, gui);
+		controller.start();
 		
-		while (true){
-			
-			String msg = channel.receiveMsg();
-			System.out.println(msg);		
-			//Thread.sleep(500);
-			
-			
-			
-		}
-		*/
 	}
 
 }

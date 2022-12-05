@@ -5,8 +5,8 @@ import utility.CommChannel;
 public class MessageControllerImpl implements MessageController {
 	
 	private final CommChannel commChannel;
-	private int smartLightState;
-	private int waterLevelState;
+	private String smartLightState;
+	private String waterLevelState;
 	private int waterLevel;
 	private boolean manualControl;
 	private boolean isLightMsg;
@@ -16,8 +16,8 @@ public class MessageControllerImpl implements MessageController {
 
 	public MessageControllerImpl(final CommChannel commChannel) {
 		this.commChannel = commChannel;
-		smartLightState = 0;
-		waterLevelState = 0;
+		smartLightState = "";
+		waterLevelState = "";
 		waterLevel = 0;
 		isLightMsg = false;
 		isWaterMsg = false;
@@ -54,13 +54,13 @@ public class MessageControllerImpl implements MessageController {
 	}
 
 	@Override
-	public int getSmartLightingState() throws InterruptedException {
+	public String getSmartLightingState() throws InterruptedException {
 		isLightMsg = false;
 		return smartLightState;
 	}
 
 	@Override
-	public int getWaterLevelState() throws InterruptedException {
+	public String getWaterLevelState() throws InterruptedException {
 		isWaterMsg = false;
 		return waterLevelState;
 	}
@@ -77,21 +77,15 @@ public class MessageControllerImpl implements MessageController {
 		return manualControl;
 	}
 	
-	@Override
-	public void close() {
-		// TODO Auto-generated method stub
-		
-	}
-	
 	private void updateValue(final String msg) {
 		try {
 			char typeValue = msg.charAt(0);
 			final String value = msg.substring(1);
 			if (typeValue == 'l') {
-				smartLightState=Integer.valueOf(value);
+				smartLightState = value;
 				isLightMsg = true;
 			} else if (typeValue == 'w') {
-				waterLevelState=Integer.valueOf(value);
+				waterLevelState = value;
 				isWaterMsg = true;
 			} else if (typeValue == 'v'){
 				waterLevel=Integer.valueOf(value);
@@ -99,8 +93,6 @@ public class MessageControllerImpl implements MessageController {
 			} else if (typeValue == 'c'){
 				manualControl = Boolean.valueOf(value);
 				isSwitchControl = true;
-			} else {
-				System.out.println(msg);
 			}
 		} catch (Exception e) {
 			return;

@@ -7,18 +7,16 @@ import view.SmartBridgeGuiImpl;
 public class SmartBridgeController implements Controller {
 	
 	private final MessageController messageController;
-	private final SmartBridgeGuiImpl gui;
+	private final SmartBridgeGui gui;
 	private boolean manualControl;
 
-	public SmartBridgeController(final String port, final int baud) throws Exception {
-		messageController = new MessageControllerImpl(new SerialCommChannel(port, baud));
-		System.out.println("Waiting Arduino for rebooting...");
-		Thread.sleep(5000);
-		System.out.println("Ready.");
-		gui = new SmartBridgeGuiImpl(this);
+	public SmartBridgeController(MessageController messageController, SmartBridgeGui gui) throws Exception {
+		this.messageController = messageController;
+		this.gui = gui;
 		manualControl = false;
 	}
 	
+	@Override
 	public void start() throws InterruptedException {//togliere eccezione
 		new java.util.Timer().schedule( 
 		        new java.util.TimerTask() {
@@ -46,18 +44,11 @@ public class SmartBridgeController implements Controller {
 				manualControl = messageController.getManualControl();
 				gui.setManualControl(manualControl);
 			}
-			
+			final int position = gui.isButtonPressed();
+			if(position >= 0) {
+				messageController.buttonPressed(position);
+			}
 		}
-	}
-	
-	public void switchManualControl(final int position) {
-		messageController.buttonPressed(position);
-	}
-	
-	@Override
-	public void close() {
-		// TODO Auto-generated method stub
-		
 	}
 
 }
