@@ -4,6 +4,8 @@
 #include "kernel/Task.h"
 #include "SmartLighting.h"
 
+#define SMART_LIGHTING_PERIOD 100
+
 class SmartLightingTask: public Task {
 
 private:

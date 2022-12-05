@@ -1,11 +1,8 @@
 #include <Arduino.h>
 #include "ManualControl.h"
-#include "config.h"
-#include "kernel/MsgService.h"
 
 ManualControl::ManualControl(){
   active = false;
-  value = 0;
 }
 
 void ManualControl::setValue(int value){

@@ -1,19 +1,16 @@
 #ifndef __SMARTLIGHTING__
 #define __SMARTLIGHTING__
 
-#include "devices/Led.h"
-#include "devices/PirSensorImpl.h"
-#include "devices/LightSensorImpl.h"
+#include "devices/Light.h"
+#include "devices/PirSensor.h"
+#include "devices/LightSensor.h"
 
 class SmartLighting {
-
 private:
   Light* led;
   PirSensor* pirSensor;
   LightSensor* lightSensor;
   volatile unsigned long time;
-  const unsigned long timeDetected = 2000;
-  const int lightThreshold = 400;
 
 public:
   SmartLighting();

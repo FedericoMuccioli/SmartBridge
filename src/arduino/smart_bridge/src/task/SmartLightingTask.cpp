@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include "SmartLightingTask.h"
 #include "kernel/MsgService.h"
+#include "config.h"
 
 SmartLightingTask::SmartLightingTask(SmartLighting* smartLighting){
   this->smartLighting = smartLighting;
@@ -13,8 +14,7 @@ void SmartLightingTask::init(int period){
 }
   
 void SmartLightingTask::tick(){
-
-  switch (state){//aggiungere stato sospesa
+  switch (state){
     case OFF:
       if (smartLighting->isSomeoneDetected()){
         smartLighting->turnLightOn();
@@ -28,14 +28,13 @@ void SmartLightingTask::tick(){
       }
       break;
   }
-  MsgService.sendMsg("l" + String(state));
+  MsgService.sendMsg(SMART_LIGHTING_STATE_MSG + String(state));
 }
 
-void SmartLightingTask::setActive(bool active){//sistemare
+void SmartLightingTask::setActive(bool active){
   if (!active){
     smartLighting->init();
-    state = OFF;
-    MsgService.sendMsg("l" + String(state));
+    MsgService.sendMsg(SMART_LIGHTING_STATE_MSG + String(state));
   }
   Task::setActive(active);
 }
