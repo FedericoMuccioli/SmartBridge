@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include "SonarImpl.h"
 
-const float soundSpeed = 331.45 + 0.62*20; //supponendo di eseguire il test in un ambiente a 20 °C
+#define SOUND_SPEED (331.45 + 0.62*20) //supponendo di eseguire il test in un ambiente a 20 °C
 
 SonarImpl::SonarImpl(int trigPin, int echoPin){
   this->trigPin = trigPin;
@@ -12,12 +12,7 @@ SonarImpl::SonarImpl(int trigPin, int echoPin){
 
 float SonarImpl::getDistance(){
   sendImpulse();
-  float distance = getTimeImpulse()*soundSpeed;
-  /*debug
-  Serial.print("distance: ");
-  Serial.println(distance);
-  */
-  return distance;
+  return getTimeImpulse()*SOUND_SPEED;
 }
 
 void SonarImpl::sendImpulse(){

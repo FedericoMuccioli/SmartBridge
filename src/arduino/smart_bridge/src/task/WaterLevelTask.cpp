@@ -37,6 +37,7 @@ void WaterLevelTask::init(int period){
 
 void WaterLevelTask::tick(){
   level = DIST_SONAR_FROM_BOT - sonar->getDistance()*100;
+  level = level < 0 ? 0 : level;
   switch (state){
     case NORMAL:
       if (IS_PRE_ALARM){

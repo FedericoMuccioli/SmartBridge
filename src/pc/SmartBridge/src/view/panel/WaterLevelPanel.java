@@ -19,7 +19,6 @@ public class WaterLevelPanel extends JPanel {
 	private static final double MAX_WATER_LEVEL = 100; //100cm
 	private static final double TIME_LAPSE = 60000.0; //60s
 	
-
     /** The time series data. */
     private TimeSeries series;
    

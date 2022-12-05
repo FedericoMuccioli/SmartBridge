@@ -13,6 +13,7 @@ void SmartLightingTask::init(int period){
   Task::init(period);
   smartLighting->init();
   state = OFF;
+  MsgService.sendMsg(SMART_LIGHTING_STATE_MSG + MSG(state));
 }
   
 void SmartLightingTask::tick(){
@@ -21,16 +22,17 @@ void SmartLightingTask::tick(){
       if (smartLighting->isSomeoneDetected()){
         smartLighting->turnLightOn();
         state = ON;
+        MsgService.sendMsg(SMART_LIGHTING_STATE_MSG + MSG(state));
       }
       break;
     case ON:
       if (!(smartLighting->isSomeoneDetected())){
         smartLighting->turnLightOff();
         state = OFF;
+        MsgService.sendMsg(SMART_LIGHTING_STATE_MSG + MSG(state));
       }
       break;
   }
-  MsgService.sendMsg(SMART_LIGHTING_STATE_MSG + MSG(state));
 }
 
 void SmartLightingTask::setActive(bool active){
