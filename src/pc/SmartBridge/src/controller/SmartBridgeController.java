@@ -1,34 +1,25 @@
 package controller;
 
-import utility.SerialCommChannel;
 import view.SmartBridgeGui;
-import view.SmartBridgeGuiImpl;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class SmartBridgeController implements Controller {
 	
 	private final MessageController messageController;
 	private final SmartBridgeGui gui;
-	private boolean manualControl;
+	private Timer timer;
+	private TimerTask task;
 
 	public SmartBridgeController(MessageController messageController, SmartBridgeGui gui) throws Exception {
 		this.messageController = messageController;
 		this.gui = gui;
-		manualControl = false;
 	}
 	
 	@Override
 	public void start() throws InterruptedException {//togliere eccezione
-		new java.util.Timer().schedule( 
-		        new java.util.TimerTask() {
-		            @Override
-		            public void run() {
-		            	if(manualControl) {
-		            		messageController.setPosition(gui.getPosition());
-		            	}
-		            }
-		        }, 0,
-		        1000
-		);
+		timer = new Timer();
+		task = getTask();
 		while(true) {
 			messageController.updateMsg();
 			if(messageController.isWaterLevelMsg()) {
@@ -41,14 +32,30 @@ public class SmartBridgeController implements Controller {
 				gui.setSmartLightingState(messageController.getSmartLightingState());
 			}
 			if(messageController.isSwitchControl()) {
-				manualControl = messageController.getManualControl();
+				boolean manualControl = messageController.getManualControl();
 				gui.setManualControl(manualControl);
+				if (manualControl) {
+					task = getTask();
+					timer.schedule(task, 0, 1000);
+				} else {
+					task.cancel();
+					timer.purge();
+				}
 			}
 			final int position = gui.isButtonPressed();
 			if(position >= 0) {
 				messageController.buttonPressed(position);
 			}
 		}
+	}
+	
+	private TimerTask getTask() {
+		return  new TimerTask() {
+			@Override
+			public void run() {
+        		messageController.setPosition(gui.getPosition());
+			}
+		};
 	}
 
 }
