@@ -25,11 +25,10 @@ private:
   Light* ledR;
   Sonar* sonar;
   ServoMotor* motor;
-  //Lcd* lcd;
   LiquidCrystal_I2C *lcd;
   enum { NORMAL, PRE_ALARM, ALARM} state;
   unsigned long timeChangeLedR;
-  int distance;
+  int level;
   void setNormalState();
   void setPreAlarmState();
   void setAlarmState();

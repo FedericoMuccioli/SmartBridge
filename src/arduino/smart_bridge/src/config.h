@@ -4,9 +4,10 @@
 #define BOUND 9600
 #define SCHEDULER_PERIOD 100
 
-#define NORMAL_WL 30
-#define PRE_ALARM_WL 20
-#define MAX_WL 10
+#define DIST_SONAR_FROM_BOT 100 //cm
+#define PRE_ALARM_WL 70
+#define ALARM_WL 80
+#define MAX_WL 90
 
 #define SMART_LIGHTING_STATE_MSG "l"
 #define WATER_LEVEL_STATE_MSG "w"

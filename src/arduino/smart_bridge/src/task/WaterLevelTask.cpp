@@ -9,10 +9,10 @@
 #include "devices/PotentiometerImpl.h"
 
 #define LEDR_BLINK_TIME 2000
-#define IS_NORMAL (distance > NORMAL_WL)
-#define IS_PRE_ALARM (distance <= NORMAL_WL && distance > PRE_ALARM_WL)
-#define IS_ALARM (distance <= PRE_ALARM_WL)
-#define AUTOMATIC_CONTROL_VALUE map(distance, PRE_ALARM_WL, MAX_WL, 0, 180)
+#define IS_NORMAL (level < PRE_ALARM_WL)
+#define IS_PRE_ALARM (level >= PRE_ALARM_WL && level < ALARM_WL)
+#define IS_ALARM (level >= ALARM_WL)
+#define AUTOMATIC_CONTROL_VALUE map(level, ALARM_WL, MAX_WL, 0, 180)
 #define MSG(state) (state == NORMAL ? String("NORMAL") : state == PRE_ALARM ? String("PRE ALARM") : String("ALARM"))
 
 WaterLevelTask::WaterLevelTask(Active* smartLight, Active* manualControlTask, ManualControl* manualControl){
@@ -36,7 +36,7 @@ void WaterLevelTask::init(int period){
 }
 
 void WaterLevelTask::tick(){
-  distance = (int)(sonar->getDistance()*100);
+  level = DIST_SONAR_FROM_BOT - sonar->getDistance()*100;
   switch (state){
     case NORMAL:
       if (IS_PRE_ALARM){
@@ -58,7 +58,7 @@ void WaterLevelTask::tick(){
       break;
 
     case ALARM:
-      if (distance > PRE_ALARM_WL){
+      if (level < ALARM_WL){
         motor->setPosition(0);
         smartLight->setActive(true);
         manualControlTask->setActive(false);
@@ -75,7 +75,7 @@ void WaterLevelTask::tick(){
       break;
   }
   MsgService.sendMsg(WATER_LEVEL_STATE_MSG + MSG(state));
-  MsgService.sendMsg(WATER_LEVEL_MSG + String(distance));
+  MsgService.sendMsg(WATER_LEVEL_MSG + String(level));
 }
 
 void WaterLevelTask::setNormalState(){
@@ -121,7 +121,7 @@ void WaterLevelTask::displayPreAlarm(){
   lcd->print("PRE ALARM");
   lcd->setCursor(0,2);
   lcd->print("Water Level: ");
-  lcd->print(distance);
+  lcd->print(level);
 }
 
 void WaterLevelTask::displayAlarm(){
@@ -130,7 +130,7 @@ void WaterLevelTask::displayAlarm(){
   lcd->print("ALARM");
   lcd->setCursor(0,2);
   lcd->print("Water Level: ");
-  lcd->print(distance);
+  lcd->print(level);
   lcd->setCursor(0,3);
   lcd->print("Valve degrees: ");
   lcd->print(motor->getPosition());

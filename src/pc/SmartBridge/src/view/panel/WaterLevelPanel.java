@@ -14,12 +14,14 @@ import org.jfree.data.xy.XYDataset;
 
 
 public class WaterLevelPanel extends JPanel {
+	
+	private static final double MIN_WATER_LEVEL = 0;
+	private static final double MAX_WATER_LEVEL = 100; //100cm
+	private static final double TIME_LAPSE = 60000.0; //60s
+	
 
     /** The time series data. */
     private TimeSeries series;
-
-    /** The most recent value added. */
-    private double lastValue = 100.0;
    
 
     public WaterLevelPanel() {
@@ -51,9 +53,9 @@ public class WaterLevelPanel extends JPanel {
         final XYPlot plot = result.getXYPlot();
         ValueAxis axis = plot.getDomainAxis();
         axis.setAutoRange(true);
-        axis.setFixedAutoRange(60000.0);
+        axis.setFixedAutoRange(TIME_LAPSE);
         axis = plot.getRangeAxis();
-        axis.setRange(0.0, 200.0);
+        axis.setRange(MIN_WATER_LEVEL, MAX_WATER_LEVEL);
         return result;
     }
     
