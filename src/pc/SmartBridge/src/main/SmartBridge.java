@@ -1,10 +1,10 @@
 package main;
+import communication.CommChannel;
+import communication.MessageInterface;
+import communication.MessageInterfaceImpl;
+import communication.SerialCommChannel;
 import controller.Controller;
-import controller.MessageController;
-import controller.MessageControllerImpl;
 import controller.SmartBridgeController;
-import utility.CommChannel;
-import utility.SerialCommChannel;
 import view.SmartBridgeGui;
 import view.SmartBridgeGuiImpl;
 
@@ -14,7 +14,7 @@ public class SmartBridge {
 	private static final int BAUD = 9600;
 	private static Controller controller;
 	private static CommChannel commChannel;
-	private static MessageController messageController;
+	private static MessageInterface messageController;
 	private static SmartBridgeGui gui;
 	
 	public static void main(String[] args) throws Exception {
@@ -25,7 +25,7 @@ public class SmartBridge {
 		Thread.sleep(5000);
 		System.out.println("Ready.");
 		
-		messageController = new MessageControllerImpl(commChannel);
+		messageController = new MessageInterfaceImpl(commChannel);
 		gui = new SmartBridgeGuiImpl();
 		controller = new SmartBridgeController(messageController, gui);
 		controller.start();

@@ -4,36 +4,41 @@ import view.SmartBridgeGui;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import communication.MessageInterface;
+
 public class SmartBridgeController implements Controller {
 	
-	private final MessageController messageController;
+	private final MessageInterface messageController;
 	private final SmartBridgeGui gui;
 	private Timer timer;
 	private TimerTask task;
 
-	public SmartBridgeController(MessageController messageController, SmartBridgeGui gui) throws Exception {
+	public SmartBridgeController(MessageInterface messageController, SmartBridgeGui gui) throws Exception {
 		this.messageController = messageController;
 		this.gui = gui;
 	}
 	
 	@Override
-	public void start() throws InterruptedException {//togliere eccezione
+	public void start() {
 		timer = new Timer();
 		task = getTask();
 		while(true) {
 			messageController.updateMsg();
 			if(messageController.isWaterLevelMsg()) {
-				gui.setWaterLevel(messageController.getWaterLevel());
+				gui.printWaterLevel(messageController.getWaterLevel());
 			}
 			if(messageController.isWaterMsg()) {
-				gui.setWaterLevelState(messageController.getWaterLevelState());
+				gui.printWaterLevelState(messageController.getWaterLevelState());
 			}
 			if(messageController.isLightMsg()) {
-				gui.setSmartLightingState(messageController.getSmartLightingState());
+				gui.printSmartLightingState(messageController.getSmartLightingState());
+			}
+			if(gui.isSwitchControlRequest()) {
+				messageController.sendSwitchControlRequest(gui.getPosition());
 			}
 			if(messageController.isSwitchControl()) {
 				boolean manualControl = messageController.getManualControl();
-				gui.setManualControl(manualControl);
+				gui.printManualControl(manualControl);
 				if (manualControl) {
 					task = getTask();
 					timer.schedule(task, 0, 1000);
@@ -42,10 +47,6 @@ public class SmartBridgeController implements Controller {
 					timer.purge();
 				}
 			}
-			final int position = gui.isButtonPressed();
-			if(position >= 0) {
-				messageController.buttonPressed(position);
-			}
 		}
 	}
 	
@@ -53,7 +54,7 @@ public class SmartBridgeController implements Controller {
 		return  new TimerTask() {
 			@Override
 			public void run() {
-        		messageController.setPosition(gui.getPosition());
+        		messageController.sendPosition(gui.getPosition());
 			}
 		};
 	}

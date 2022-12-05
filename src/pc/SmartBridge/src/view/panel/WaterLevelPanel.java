@@ -12,11 +12,7 @@ import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.xy.XYDataset;
 
-/**
- * A demonstration application showing a time series chart where you can dynamically add
- * (random) data by clicking on a button.
- *
- */
+
 public class WaterLevelPanel extends JPanel {
 
     /** The time series data. */
@@ -25,17 +21,12 @@ public class WaterLevelPanel extends JPanel {
     /** The most recent value added. */
     private double lastValue = 100.0;
    
-    /**
-     * Constructs a new demonstration application.
-     *
-     * @param title  the frame title.
-     */
+
     public WaterLevelPanel() {
+    	this.setLayout(new BorderLayout());
         this.series = new TimeSeries("Random Data");
         final TimeSeriesCollection dataset = new TimeSeriesCollection(this.series);
         final JFreeChart chart = createChart(dataset);
-
-        this.setLayout(new BorderLayout());
         final ChartPanel chartPanel = new ChartPanel(chart);
         this.add(chartPanel);
     }
@@ -60,20 +51,13 @@ public class WaterLevelPanel extends JPanel {
         final XYPlot plot = result.getXYPlot();
         ValueAxis axis = plot.getDomainAxis();
         axis.setAutoRange(true);
-        axis.setFixedAutoRange(60000.0);  // 60 seconds
+        axis.setFixedAutoRange(60000.0);
         axis = plot.getRangeAxis();
         axis.setRange(0.0, 200.0);
         return result;
     }
     
-    public void printWaterLevel(final int waterLevel) {
+    public void print(final int waterLevel) {
     	series.add(new Millisecond(), waterLevel);
     }
 }
-
-
-
-
-
-
-

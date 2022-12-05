@@ -1,16 +1,13 @@
 package view;
 
-import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-
-import controller.SmartBridgeController;
-import view.panel.MotorPositionPanel;
+import view.panel.ManualControlPanel;
 import view.panel.SmartLightingStatePanel;
 import view.panel.WaterLevelPanel;
 import view.panel.WaterLevelStatePanel;
+import view.utility.MyGridBagConstraints;
 
 public class SmartBridgeGuiImpl implements SmartBridgeGui {
 	
@@ -18,8 +15,7 @@ public class SmartBridgeGuiImpl implements SmartBridgeGui {
 	private final WaterLevelPanel waterLevel;
 	private final SmartLightingStatePanel smartLightingState;
 	private final WaterLevelStatePanel waterLevelState;
-	private final MotorPositionPanel motorPosition;
-	
+	private final ManualControlPanel manualControl;
 	
 	public SmartBridgeGuiImpl() {
 		frame = new JFrame();
@@ -27,12 +23,12 @@ public class SmartBridgeGuiImpl implements SmartBridgeGui {
 		smartLightingState = new SmartLightingStatePanel();
 		waterLevelState = new WaterLevelStatePanel();
 		waterLevel = new WaterLevelPanel();
-		motorPosition = new MotorPositionPanel();
+		manualControl = new ManualControlPanel();
 		
-		panel.add(waterLevel, getGbc(0,0,2,3));
-		panel.add(smartLightingState, getGbc(2,0,1,1));
-		panel.add(waterLevelState, getGbc(2,1,1,1));
-		panel.add(motorPosition, getGbc(2,2,1,1));
+		panel.add(waterLevel, new MyGridBagConstraints(0,0,2,3));
+		panel.add(smartLightingState, new MyGridBagConstraints(2,0,1,1));
+		panel.add(waterLevelState, new MyGridBagConstraints(2,1,1,1));
+		panel.add(manualControl, new MyGridBagConstraints(2,2,1,1));
 		
 		frame.add(panel);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -42,45 +38,33 @@ public class SmartBridgeGuiImpl implements SmartBridgeGui {
 		frame.setVisible(true);
 	}
 
-	private GridBagConstraints getGbc(final int x, final int y, final int width, final int height) {
-		final var gbc = new GridBagConstraints();
-		gbc.fill = GridBagConstraints.BOTH;
-		gbc.gridx = x;
-		gbc.gridy = y;
-		gbc.gridwidth = width;
-        gbc.gridheight = height;
-		gbc.weightx=1.0;
-		gbc.weighty=1.0;
-		return gbc;
-	}
 	@Override
-	public void setSmartLightingState(final String smartLightingState) {
+	public void printSmartLightingState(final String smartLightingState) {
 		this.smartLightingState.setState(smartLightingState);
 	}
 
 	@Override
-	public void setWaterLevelState(final String waterLevelState) {
+	public void printWaterLevelState(final String waterLevelState) {
 		this.waterLevelState.setState(waterLevelState);
-		
 	}
 
 	@Override
-	public void setWaterLevel(final int value) {
-		this.waterLevel.printWaterLevel(value);
+	public void printWaterLevel(final int value) {
+		this.waterLevel.print(value);
 	}
 
 	@Override
 	public int getPosition() {
-		return motorPosition.getPosition();
+		return manualControl.getPosition();
 	}
 
 	@Override
-	public void setManualControl(boolean manualControl) {
-		motorPosition.setManualControl(manualControl);
+	public void printManualControl(boolean mode) {
+		manualControl.setMode(mode);
 	}
 
 	@Override
-	public int isButtonPressed() {
-		return motorPosition.isButtonPressed();
+	public boolean isSwitchControlRequest() {
+		return manualControl.isSwitchControlRequest();
 	}
 }

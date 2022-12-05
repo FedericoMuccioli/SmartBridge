@@ -13,7 +13,6 @@ public abstract class StatePanel extends JPanel {
 		this.setLayout(new GridBagLayout());
 		JLabel state = new JLabel(stateName + ": ");
 		value = new JLabel();
-		value.setText("CIAO");
 		this.add(state);
 		this.add(value);
 	}

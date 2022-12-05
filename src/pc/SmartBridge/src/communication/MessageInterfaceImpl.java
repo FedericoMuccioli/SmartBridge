@@ -1,8 +1,6 @@
-package controller;
+package communication;
 
-import utility.CommChannel;
-
-public class MessageControllerImpl implements MessageController {
+public class MessageInterfaceImpl implements MessageInterface {
 	
 	private final CommChannel commChannel;
 	private String smartLightState;
@@ -14,7 +12,7 @@ public class MessageControllerImpl implements MessageController {
 	private boolean isWaterLevelMsg;
 	private boolean isSwitchControl;
 
-	public MessageControllerImpl(final CommChannel commChannel) {
+	public MessageInterfaceImpl(final CommChannel commChannel) {
 		this.commChannel = commChannel;
 		smartLightState = "";
 		waterLevelState = "";
@@ -26,10 +24,14 @@ public class MessageControllerImpl implements MessageController {
 	}
 	
 	@Override
-	public void updateMsg() throws InterruptedException {
+	public void updateMsg() {
 		while(commChannel.isMsgAvailable()) {
-			final String msg = commChannel.receiveMsg();
-			updateValue(msg);
+			try {
+				String msg = commChannel.receiveMsg();
+				updateValue(msg);
+			} catch (InterruptedException e) {
+				return;
+			}
 		}
 	}
 	
@@ -54,29 +56,39 @@ public class MessageControllerImpl implements MessageController {
 	}
 
 	@Override
-	public String getSmartLightingState() throws InterruptedException {
+	public String getSmartLightingState() {
 		isLightMsg = false;
 		return smartLightState;
 	}
 
 	@Override
-	public String getWaterLevelState() throws InterruptedException {
+	public String getWaterLevelState() {
 		isWaterMsg = false;
 		return waterLevelState;
 	}
 
 	@Override
-	public int getWaterLevel() throws InterruptedException {
+	public int getWaterLevel() {
 		isWaterLevelMsg = false;
 		return waterLevel;
 	}
 	
 	@Override
-	public boolean getManualControl() throws InterruptedException {
+	public boolean getManualControl() {
 		isSwitchControl = false;
 		return manualControl;
 	}
+
+	@Override
+	public void sendSwitchControlRequest(final int position) {
+		commChannel.sendMsg("-".concat(String.valueOf(position)));
+	}
 	
+	@Override
+	public void sendPosition(final int position) {
+		commChannel.sendMsg(String.valueOf(position));
+	}
+
 	private void updateValue(final String msg) {
 		try {
 			char typeValue = msg.charAt(0);
@@ -98,15 +110,4 @@ public class MessageControllerImpl implements MessageController {
 			return;
 		}
 	}
-
-	@Override
-	public void buttonPressed(final int position) {
-		commChannel.sendMsg("-".concat(String.valueOf(position)));
-	}
-	
-	@Override
-	public void setPosition(final int position) {
-		commChannel.sendMsg(String.valueOf(position));
-	}
-
 }
