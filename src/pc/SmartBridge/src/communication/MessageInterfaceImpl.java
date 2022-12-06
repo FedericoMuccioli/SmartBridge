@@ -105,6 +105,8 @@ public class MessageInterfaceImpl implements MessageInterface {
 			} else if (typeValue == 'c'){
 				manualControl = Boolean.valueOf(value);
 				isSwitchControl = true;
+			} else {
+				System.out.println(msg);
 			}
 		} catch (Exception e) {
 			return;

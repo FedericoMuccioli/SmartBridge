@@ -6,10 +6,12 @@
 #define MAX_TASKS 3
 
 class Scheduler {
-  
+
   int basePeriod;
   int nTasks;
   Task* taskList[MAX_TASKS];  
+  void sleepNow();
+
 
 public:
   void init(int basePeriod);  
