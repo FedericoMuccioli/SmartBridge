@@ -4,21 +4,29 @@ import view.SmartBridgeGui;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import communication.MessageInterface;
+import communication.SmartBridgeMessageInterface;
 
-public class SmartBridgeController implements Controller {
+public class SmartBridgeController {
 	
-	private final MessageInterface messageController;
+	private final SmartBridgeMessageInterface messageController;
 	private final SmartBridgeGui gui;
 	private Timer timer;
 	private TimerTask task;
 
-	public SmartBridgeController(MessageInterface messageController, SmartBridgeGui gui) throws Exception {
-		this.messageController = messageController;
+	/**
+	 * Smart bridge controller. Check the arrived messages, update the gui and command the sending of messages.
+	 * 
+	 * @param messageInterface  the interface for the communication
+	 * @param gui graphical user interface
+	 */
+	public SmartBridgeController(SmartBridgeMessageInterface messageInterface, SmartBridgeGui gui) {
+		this.messageController = messageInterface;
 		this.gui = gui;
 	}
 	
-	@Override
+	/**
+	 * Start the behavior of the controller. Update states and water level, check manual control and send motor position.
+	 */
 	public void start() {
 		timer = new Timer();
 		task = getTask();
@@ -36,7 +44,7 @@ public class SmartBridgeController implements Controller {
 			if(gui.isSwitchControlRequest()) {
 				messageController.sendSwitchControlRequest(gui.getPosition());
 			}
-			if(messageController.isSwitchControl()) {
+			if(messageController.isManualControlMsg()) {
 				boolean manualControl = messageController.getManualControl();
 				gui.printManualControl(manualControl);
 				if (manualControl) {
@@ -50,6 +58,10 @@ public class SmartBridgeController implements Controller {
 		}
 	}
 	
+	/**
+	 * Return task for update motor position.
+	 * @return timer task
+	 */
 	private TimerTask getTask() {
 		return  new TimerTask() {
 			@Override

@@ -13,6 +13,9 @@ public class ManualControlPanel extends JPanel {
 	private final JButton button;
 	private boolean isButtonPressed;
 	
+	/**
+	 * Panel which allows to set value motor position.
+	 */
 	public ManualControlPanel() {
 		this.setLayout(new GridBagLayout());
 		slider = new JSlider(JSlider.HORIZONTAL, 0, 180, 0);
@@ -29,16 +32,31 @@ public class ManualControlPanel extends JPanel {
 		this.add(button, new MyGridBagConstraints(0,2,1,1));
 	}
 	
+	/**
+	 * Return position set.
+	 * 
+	 * @return the position
+	 */
 	public int getPosition() {
 		return slider.getValue();
 	}
 	
+	/**
+	 * Return if is request the switch of the control mode.
+	 * 
+	 * @return if switch control request
+	 */
 	public boolean isSwitchControlRequest() {
 		boolean isPressed = isButtonPressed;
 		isButtonPressed = false;
 		return isPressed;
 	}
 	
+	/**
+	 * Update manual control.
+	 * 
+	 * @param mode if manual control active or not.
+	 */
 	public void setMode(boolean mode) {
 		if(mode) {
 			button.setText("Manual Control ON");

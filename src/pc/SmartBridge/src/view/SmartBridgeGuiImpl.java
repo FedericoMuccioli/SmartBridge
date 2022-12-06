@@ -17,6 +17,11 @@ public class SmartBridgeGuiImpl implements SmartBridgeGui {
 	private final WaterLevelStatePanel waterLevelState;
 	private final ManualControlPanel manualControl;
 	
+	/**
+	 * Implementation of the gui of the smart bridge. Show a chart with water level on the time.
+	 * The states of water level, smart lighting and manual control.
+	 * Allow to set motor position.
+	 */
 	public SmartBridgeGuiImpl() {
 		frame = new JFrame();
 		final JPanel panel = new JPanel(new GridBagLayout());

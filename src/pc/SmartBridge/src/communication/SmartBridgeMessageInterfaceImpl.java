@@ -1,6 +1,10 @@
 package communication;
 
-public class MessageInterfaceImpl implements MessageInterface {
+/**
+ * Implementation of interface for encode messages between application and communication channel
+ * @author federico
+ */
+public class SmartBridgeMessageInterfaceImpl implements SmartBridgeMessageInterface {
 	
 	private final CommChannel commChannel;
 	private String smartLightState;
@@ -12,7 +16,12 @@ public class MessageInterfaceImpl implements MessageInterface {
 	private boolean isWaterLevelMsg;
 	private boolean isSwitchControl;
 
-	public MessageInterfaceImpl(final CommChannel commChannel) {
+	/**
+	 * Create new message interface with communicate channel specify. 
+	 * 
+	 * @param commChannel communicate channel used
+	 */
+	public SmartBridgeMessageInterfaceImpl(final CommChannel commChannel) {
 		this.commChannel = commChannel;
 		smartLightState = "";
 		waterLevelState = "";
@@ -51,7 +60,7 @@ public class MessageInterfaceImpl implements MessageInterface {
 	}
 	
 	@Override
-	public boolean isSwitchControl() {
+	public boolean isManualControlMsg() {
 		return isSwitchControl;
 	}
 
@@ -89,6 +98,12 @@ public class MessageInterfaceImpl implements MessageInterface {
 		commChannel.sendMsg(String.valueOf(position));
 	}
 
+	
+	/**
+	 * Update value saved of message specify
+	 * 
+	 * @param msg message to update value
+	 */
 	private void updateValue(final String msg) {
 		try {
 			char typeValue = msg.charAt(0);
@@ -105,8 +120,6 @@ public class MessageInterfaceImpl implements MessageInterface {
 			} else if (typeValue == 'c'){
 				manualControl = Boolean.valueOf(value);
 				isSwitchControl = true;
-			} else {
-				System.out.println(msg);
 			}
 		} catch (Exception e) {
 			return;

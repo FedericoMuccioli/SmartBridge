@@ -13,6 +13,10 @@ import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.xy.XYDataset;
 
 
+/**
+ * Water level panel which contains a chart in real time.
+ * @author federico
+ */
 public class WaterLevelPanel extends JPanel {
 	
 	private static final double MIN_WATER_LEVEL = 0;
@@ -23,9 +27,12 @@ public class WaterLevelPanel extends JPanel {
     private TimeSeries series;
    
 
+    /**
+     * Create the water level panel.
+     */
     public WaterLevelPanel() {
     	this.setLayout(new BorderLayout());
-        this.series = new TimeSeries("Random Data");
+        this.series = new TimeSeries("Water level");
         final TimeSeriesCollection dataset = new TimeSeriesCollection(this.series);
         final JFreeChart chart = createChart(dataset);
         final ChartPanel chartPanel = new ChartPanel(chart);
@@ -35,13 +42,12 @@ public class WaterLevelPanel extends JPanel {
     /**
      * Creates a sample chart.
      * 
-     * @param dataset  the dataset.
-     * 
-     * @return A sample chart.
+     * @param dataset the dataset
+     * @return A sample chart
      */
     private JFreeChart createChart(final XYDataset dataset) {
         final JFreeChart result = ChartFactory.createTimeSeriesChart(
-            "Dynamic Data Demo", 
+            "Dynamic Water Level", 
             "Time", 
             "Value",
             dataset, 
@@ -58,6 +64,11 @@ public class WaterLevelPanel extends JPanel {
         return result;
     }
     
+    /**
+     * Add current water level in chart.
+     * 
+     * @param waterLevel the level of the water
+     */
     public void print(final int waterLevel) {
     	series.add(new Millisecond(), waterLevel);
     }
