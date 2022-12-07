@@ -10,11 +10,11 @@ public class SmartBridgeMessageInterfaceImpl implements SmartBridgeMessageInterf
 	private String smartLightState;
 	private String waterLevelState;
 	private int waterLevel;
-	private boolean manualControl;
+	private String manualControl;
 	private boolean isLightMsg;
 	private boolean isWaterMsg;
 	private boolean isWaterLevelMsg;
-	private boolean isSwitchControl;
+	private boolean isManualControl;
 
 	/**
 	 * Create new message interface with communicate channel specify. 
@@ -26,10 +26,11 @@ public class SmartBridgeMessageInterfaceImpl implements SmartBridgeMessageInterf
 		smartLightState = "";
 		waterLevelState = "";
 		waterLevel = 0;
+		manualControl = "";
 		isLightMsg = false;
 		isWaterMsg = false;
 		isWaterLevelMsg = false;
-		isSwitchControl = false;
+		isManualControl = false;
 	}
 	
 	@Override
@@ -61,7 +62,7 @@ public class SmartBridgeMessageInterfaceImpl implements SmartBridgeMessageInterf
 	
 	@Override
 	public boolean isManualControlMsg() {
-		return isSwitchControl;
+		return isManualControl;
 	}
 
 	@Override
@@ -83,8 +84,8 @@ public class SmartBridgeMessageInterfaceImpl implements SmartBridgeMessageInterf
 	}
 	
 	@Override
-	public boolean getManualControl() {
-		isSwitchControl = false;
+	public String getManualControl() {
+		isManualControl = false;
 		return manualControl;
 	}
 
@@ -118,8 +119,8 @@ public class SmartBridgeMessageInterfaceImpl implements SmartBridgeMessageInterf
 				waterLevel=Integer.valueOf(value);
 				isWaterLevelMsg = true;
 			} else if (typeValue == 'c'){
-				manualControl = Boolean.valueOf(value);
-				isSwitchControl = true;
+				manualControl = value;
+				isManualControl = true;
 			}
 		} catch (Exception e) {
 			return;

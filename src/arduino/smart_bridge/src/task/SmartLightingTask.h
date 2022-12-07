@@ -9,7 +9,7 @@
 class SmartLightingTask: public Task {
 
 private:
-  enum {OFF, ON} state;
+  enum {OFF, ON, DISABLE} state;
   SmartLighting* smartLighting;
 
 public:

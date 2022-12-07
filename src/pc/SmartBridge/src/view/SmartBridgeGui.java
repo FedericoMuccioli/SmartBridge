@@ -48,6 +48,6 @@ public interface SmartBridgeGui {
 	 * 
 	 * @param manualControl if manual control active or not.
 	 */
-	void printManualControl(boolean manualControl);
+	void printManualControl(String manualControl);
 
 }

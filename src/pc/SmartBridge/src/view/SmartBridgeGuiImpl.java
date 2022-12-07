@@ -64,7 +64,7 @@ public class SmartBridgeGuiImpl implements SmartBridgeGui {
 	}
 
 	@Override
-	public void printManualControl(boolean mode) {
+	public void printManualControl(final String mode) {
 		manualControl.setMode(mode);
 	}
 

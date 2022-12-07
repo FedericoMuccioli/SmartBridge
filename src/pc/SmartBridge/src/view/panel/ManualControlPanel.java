@@ -57,12 +57,8 @@ public class ManualControlPanel extends JPanel {
 	 * 
 	 * @param mode if manual control active or not.
 	 */
-	public void setMode(boolean mode) {
-		if(mode) {
-			button.setText("Manual Control ON");
-		} else {
-			button.setText("Manual Control OFF");
-		}
+	public void setMode(final String mode) {
+		button.setText("Manual Control: " + mode);
 	}
 
 }

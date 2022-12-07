@@ -15,8 +15,8 @@
 #define AUTOMATIC_CONTROL_VALUE map(level, ALARM_WL, MAX_WL, 0, 180)
 #define MSG(state) (state == NORMAL ? String("NORMAL") : state == PRE_ALARM ? String("PRE ALARM") : String("ALARM"))
 
-WaterLevelTask::WaterLevelTask(Active* smartLight, Active* manualControlTask, ManualControl* manualControl){
-  this->smartLight = smartLight;
+WaterLevelTask::WaterLevelTask(Active* smartLightTask, Active* manualControlTask, ManualControl* manualControl){
+  this->smartLightTask = smartLightTask;
   this->manualControl = manualControl;
   this->manualControlTask = manualControlTask;
   ledG = new Led(LED_G_PIN);
@@ -31,6 +31,7 @@ void WaterLevelTask::init(int period){
   lcd->init();
   motor->on();
   motor->setPosition(0);
+  smartLightTask->setActive(true);
   manualControlTask->setActive(false);
   setNormalState();
 }
@@ -61,7 +62,7 @@ void WaterLevelTask::tick(){
     case ALARM:
       if (level < ALARM_WL){
         motor->setPosition(0);
-        smartLight->setActive(true);
+        smartLightTask->setActive(true);
         manualControlTask->setActive(false);
         if(IS_NORMAL){
           setNormalState();
@@ -99,7 +100,7 @@ void WaterLevelTask::setPreAlarmState(){
 void WaterLevelTask::setAlarmState(){
   ledR->switchOn();
   ledG->switchOff();
-  smartLight->setActive(false);
+  smartLightTask->setActive(false);
   manualControlTask->setActive(true);
   int angle = manualControl->isActive() ? manualControl->getValue() :  AUTOMATIC_CONTROL_VALUE;
   motor->setPosition(angle);

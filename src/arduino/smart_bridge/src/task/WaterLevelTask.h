@@ -18,7 +18,7 @@
 class WaterLevelTask: public Task {
 
 private:
-  Active* smartLight;
+  Active* smartLightTask;
   Active* manualControlTask;
   ManualControl* manualControl;
   Light* ledG;

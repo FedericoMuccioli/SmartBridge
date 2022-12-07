@@ -10,7 +10,7 @@
 
 class ManualControlTask: public Task {
 private:
-  enum {OFF, SOFTWARE, HARDWARE} state;
+  enum {OFF, SOFTWARE, HARDWARE, DISABLE} state;
   ManualControl* manualControl;
   Button* button;
   Potentiometer* pot;

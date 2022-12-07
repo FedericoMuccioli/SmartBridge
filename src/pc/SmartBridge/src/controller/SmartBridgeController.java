@@ -1,6 +1,8 @@
 package controller;
 
 import view.SmartBridgeGui;
+
+import java.util.Optional;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -11,7 +13,7 @@ public class SmartBridgeController {
 	private final SmartBridgeMessageInterface messageController;
 	private final SmartBridgeGui gui;
 	private Timer timer;
-	private TimerTask task;
+	private Optional<TimerTask> task;
 
 	/**
 	 * Smart bridge controller. Check the arrived messages, update the gui and command the sending of messages.
@@ -26,10 +28,13 @@ public class SmartBridgeController {
 	
 	/**
 	 * Start the behavior of the controller. Update states and water level, check manual control and send motor position.
+	 * @throws InterruptedException 
 	 */
-	public void start() {
+	public void start() throws InterruptedException {
 		timer = new Timer();
 		task = getTask();
+		timer.schedule(task.get(), 0, 1000);
+		timer.wait();
 		while(true) {
 			messageController.updateMsg();
 			if(messageController.isWaterLevelMsg()) {
@@ -45,14 +50,13 @@ public class SmartBridgeController {
 				messageController.sendSwitchControlRequest(gui.getPosition());
 			}
 			if(messageController.isManualControlMsg()) {
-				boolean manualControl = messageController.getManualControl();
+				String manualControl = messageController.getManualControl();
 				gui.printManualControl(manualControl);
-				if (manualControl) {
-					task = getTask();
-					timer.schedule(task, 0, 1000);
-				} else {
-					task.cancel();
-					timer.purge();
+				if (manualControl.compareTo("SOFTWARE") == 0) {
+					timer.notifyAll();
+					
+				} else if (task.isPresent()){
+					timer.wait();
 				}
 			}
 		}
@@ -60,15 +64,15 @@ public class SmartBridgeController {
 	
 	/**
 	 * Return task for update motor position.
-	 * @return timer task
+	 * @return Optional of TimerTask
 	 */
-	private TimerTask getTask() {
-		return  new TimerTask() {
+	private Optional<TimerTask> getTask() {
+		return Optional.of(new TimerTask() {
 			@Override
 			public void run() {
         		messageController.sendPosition(gui.getPosition());
 			}
-		};
+		});
 	}
-
+	
 }

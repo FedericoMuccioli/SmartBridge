@@ -3,7 +3,7 @@
 #include "kernel/MsgService.h"
 #include "config.h"
 
-#define MSG(state) (state == ON ? String("ON") : String("OFF"))
+#define MSG(state) (state == ON ? String("ON") : state == OFF ? String("OFF") : String("DISABLE"))
 
 SmartLightingTask::SmartLightingTask(SmartLighting* smartLighting){
   this->smartLighting = smartLighting;
@@ -36,10 +36,12 @@ void SmartLightingTask::tick(){
 }
 
 void SmartLightingTask::setActive(bool active){
-  if (!active){
-    smartLighting->init();
+  if (active){
     state = OFF;
-    MsgService.sendMsg(SMART_LIGHTING_STATE_MSG + MSG(state));
+  } else {
+    smartLighting->init();
+    state = DISABLE;
   }
+  MsgService.sendMsg(SMART_LIGHTING_STATE_MSG + MSG(state));
   Task::setActive(active);
 }

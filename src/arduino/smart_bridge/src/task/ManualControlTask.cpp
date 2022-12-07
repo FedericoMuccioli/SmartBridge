@@ -7,7 +7,7 @@
 
 #define HARDWARE_CONTROL_VALUE map(pot->getAdjustment(), 30, 1000, 0, 180)
 
-#define MSG(state) (state == OFF ? String("false") : String("true"))
+#define MSG(state) (state == OFF ? String("OFF") : state == SOFTWARE ? String("SOFTWARE") : state == HARDWARE ? String("HARDWARE") : String("DISABLE"))
 
 ManualControlTask::ManualControlTask(ManualControl* manualControl){
   this->manualControl = manualControl;
@@ -37,6 +37,7 @@ void ManualControlTask::tick(){
         manualControl->setActive(true);
         manualControl->setValue(HARDWARE_CONTROL_VALUE);
         state = HARDWARE;
+        MsgService.sendMsg(MANUAL_CONTROL_MSG + MSG(state));
       }
       break;
     case SOFTWARE:
@@ -56,6 +57,7 @@ void ManualControlTask::tick(){
         manualControl->setActive(false);
         emptyMsgBuffer();
         state = OFF;
+        MsgService.sendMsg(MANUAL_CONTROL_MSG + MSG(state));
       } else {
         manualControl->setValue(HARDWARE_CONTROL_VALUE);
       }
@@ -64,14 +66,15 @@ void ManualControlTask::tick(){
 }
 
 void ManualControlTask::setActive(bool active){
-  if (!active){
-    state = OFF;
-    MsgService.sendMsg(MANUAL_CONTROL_MSG + MSG(state));
-    manualControl->setActive(false);
-  } else {
+  if (active){
     emptyMsgBuffer();
+    state = OFF;
+  } else {
+    state = DISABLE;
+    manualControl->setActive(false);
   }
   Task::setActive(active);
+  MsgService.sendMsg(MANUAL_CONTROL_MSG + MSG(state));
 }
 
 void ManualControlTask::emptyMsgBuffer(){

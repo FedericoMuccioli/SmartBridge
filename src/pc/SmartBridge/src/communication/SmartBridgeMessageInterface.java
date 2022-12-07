@@ -66,7 +66,7 @@ public interface SmartBridgeMessageInterface {
 	 * 
 	 * @return manual control mode
 	 */
-	boolean getManualControl();
+	String getManualControl();
 	
 	/**
 	 * Manual control is on, send position of motor.
