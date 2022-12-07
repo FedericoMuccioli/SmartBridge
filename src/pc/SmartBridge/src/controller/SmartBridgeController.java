@@ -28,13 +28,10 @@ public class SmartBridgeController {
 	
 	/**
 	 * Start the behavior of the controller. Update states and water level, check manual control and send motor position.
-	 * @throws InterruptedException 
 	 */
-	public void start() throws InterruptedException {
+	public void start() {
 		timer = new Timer();
-		task = getTask();
-		timer.schedule(task.get(), 0, 1000);
-		timer.wait();
+		task = Optional.empty();
 		while(true) {
 			messageController.updateMsg();
 			if(messageController.isWaterLevelMsg()) {
@@ -53,10 +50,12 @@ public class SmartBridgeController {
 				String manualControl = messageController.getManualControl();
 				gui.printManualControl(manualControl);
 				if (manualControl.compareTo("SOFTWARE") == 0) {
-					timer.notifyAll();
-					
+					task = getPositionTask();
+					timer.schedule(task.get(), 0, 1000);
 				} else if (task.isPresent()){
-					timer.wait();
+					task.get().cancel();
+					task = Optional.empty();
+					timer.purge();
 				}
 			}
 		}
@@ -66,7 +65,7 @@ public class SmartBridgeController {
 	 * Return task for update motor position.
 	 * @return Optional of TimerTask
 	 */
-	private Optional<TimerTask> getTask() {
+	private Optional<TimerTask> getPositionTask() {
 		return Optional.of(new TimerTask() {
 			@Override
 			public void run() {
